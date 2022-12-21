@@ -1,0 +1,10 @@
+{
+  "reporter": [
+    "text",
+    "lcov"
+  ],
+  "all": true,
+  "src": ["src"],
+  "extension": [".ts", ".vue"],
+  "skip-full": true
+}
