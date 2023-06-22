@@ -17,6 +17,7 @@ class HeaderComparison {
 }
 
 export default class CSVFile {
+  private dictionary = new Dictionary();
   public errors: string[] = [];
 
   private clearErrors(): void {
@@ -50,12 +51,18 @@ export default class CSVFile {
     }
   }
   protected columns(titles: string[]): string[] {
-    const comparison = new HeaderComparison(titles, Dictionary.inputWords);
+    const comparison = new HeaderComparison(
+      titles,
+      this.dictionary.inputWords()
+    );
 
     if (comparison.hasMismatch()) {
       throw comparison;
     }
 
-    return _.map(titles, Dictionary.translate);
+    return _.map(titles, (title) => {
+      const translation = this.dictionary.translate(title);
+      return translation ? translation : "";
+    });
   }
 }
