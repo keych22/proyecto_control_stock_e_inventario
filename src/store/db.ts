@@ -7,7 +7,7 @@ import {
 } from "firebase/firestore";
 import CSVFile from "@/core/csvfile";
 import type { Entry } from "@/core/core";
-import { Validation } from "@/core/validation";
+import { ValidationError } from "@/core/validation";
 import _ from "lodash";
 import { defineStore } from "pinia";
 import firebase from "@/core/services/firebase";
@@ -54,7 +54,7 @@ function storeSetup() {
       for (const entry of entries) {
         progress(Math.ceil((lineNumber / totalEntries) * 100));
         ++lineNumber;
-        const validation = new Validation();
+        const validation = new ValidationError();
         validation.validate(entry);
         _.values(validation.errors).forEach((error) => {
           if (error) {

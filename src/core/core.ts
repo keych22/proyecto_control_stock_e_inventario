@@ -26,4 +26,16 @@ interface Entry {
   address: string;
 }
 
-export type { Entry };
+const Cities = ["NEUQUÉN", "BUENOS AIRES"];
+
+const States = [
+  "Vendido",
+  "Credito",
+  "Apartado",
+  "SinVender",
+  "Dañado",
+  "Perdido",
+];
+const StartDate = "2019-04-22";
+
+export { type Entry, Cities, StartDate, States };

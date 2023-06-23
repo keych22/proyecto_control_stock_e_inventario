@@ -1,5 +1,49 @@
-import type { Entry } from "@/core/core";
+import { Cities, type Entry, StartDate, States } from "@/core/core";
 import _ from "lodash";
+
+export class Validator {
+  public static isValidCity(city: string) {
+    return Cities.includes(city);
+  }
+  public static isValidState(state: string) {
+    return States.includes(state);
+  }
+  public static isValidDate(date: Date) {
+    const value = date.getTime();
+
+    const lowerBound = new Date(StartDate).getTime();
+    const upperBound = Date.now();
+
+    return lowerBound <= value && value <= upperBound;
+  }
+
+  public static isValidPhoneNumber(phoneNumber: string) {
+    const regex = /^[1-9]\d{9}$/;
+    return regex.test(phoneNumber);
+  }
+
+  public static convertAmountDecimals(value: string) {
+    const regex = /^(?<integer>\d*)(\.?)(?<decimal>\d{0,2})$/;
+    const match = value.match(regex);
+
+    if (!match) {
+      return null;
+    }
+
+    const integer = match.groups!.integer;
+    const decimal = match.groups!.decimal;
+
+    if (!integer.length && !decimal.length) {
+      return null;
+    }
+
+    const integerNumber = parseInt(integer.padEnd(1, "0"));
+    const decimalNumber = parseInt(decimal.padEnd(2, "0"));
+
+    return 100 * integerNumber + decimalNumber;
+  }
+}
+
 class Data {
   purchasePrice: null | number = null;
   sellingPrice: null | number = null;
@@ -29,14 +73,14 @@ export enum DateType {
   selling,
 }
 
-export class Validation {
+export class ValidationError {
   public data: Data = new Data();
   public errors: Errors = new Errors();
 
   public validate(entry: Entry) {
+    this.validateCity(entry.city);
     this.validateDate(DateType.purchase, entry.purchaseDate);
     this.validateSupplierNameIsNotEmpty(entry);
-    this.validateCity(entry.city);
     switch (entry.state) {
       case "Vendido": {
         this.validateSoldItem(entry);
@@ -153,68 +197,41 @@ export class Validation {
     this.validateNumberTelephoneIsEmpty(entry.telephone);
   }
 
-  public convertAmountStringToCents(
-    type: DateType,
-    amount: string
-  ): null | number {
-    const match = amount.match(
-      /^(?<integer>\d*)(?<dot>\.?)(?<decimal>\d{0,2})$/
-    );
-    if (!match) {
+  public convertAmountStringToCents(type: DateType, value: string) {
+    const amount = Validator.convertAmountDecimals(value);
+
+    if (!amount) {
       if (type === DateType.purchase) {
-        this.errors.purchasePrice = `El precio de compra esta incorrecto: "${amount}"`;
+        this.errors.purchasePrice = `El precio de compra esta incorrecto: "${value}"`;
       } else if (type === DateType.selling) {
-        this.errors.sellingPrice = `El precio de venta esta incorrecto: "${amount}"`;
+        this.errors.sellingPrice = `El precio de venta esta incorrecto: "${value}"`;
       }
-      return null;
     }
 
-    const integer = match!.groups!.integer;
-    const decimal = match!.groups!.decimal;
-
-    if (!integer.length && !decimal.length) {
-      if (type === DateType.purchase) {
-        this.errors.purchasePrice = `El precio de compra esta incorrecto: "${amount}"`;
-      } else if (type === DateType.selling) {
-        this.errors.sellingPrice = `El precio de venta esta incorrecto: "${amount}"`;
-      }
-      return null;
-    }
-
-    return (
-      100 * parseInt(integer.padEnd(1, "0")) + parseInt(decimal.padEnd(2, "0"))
-    );
+    return amount;
   }
 
-  public verifyPhoneNumber(telephone: string): void {
-    const expReg = /^[1-9]\d{9}$/;
-    const formatMatch = expReg.test(telephone);
-    if (!formatMatch) {
+  public verifyPhoneNumber(telephone: string) {
+    if (!Validator.isValidPhoneNumber(telephone)) {
       this.errors.telephone = `Número telefónico inválido (Teléfono: ${telephone})`;
     }
   }
 
-  public validateDate(type: DateType, date: string): void {
-    const regex = /^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})$/;
-    const match = date.match(regex);
-    if (!match) {
+  public validateDate(type: DateType, value: string) {
+    const date = new Date(value);
+    if (!date) {
       if (type === DateType.purchase) {
-        this.errors.purchaseDate = `Formato de fecha de compra incorrecto (Fecha: "${date}")`;
+        this.errors.purchaseDate = `Formato de fecha de compra incorrecto (Fecha: "${value}")`;
       } else if (type === DateType.selling) {
-        this.errors.sellingDate = `Formato de fecha de venta incorrecto (Fecha: "${date}")`;
+        this.errors.sellingDate = `Formato de fecha de venta incorrecto (Fecha: "${value}")`;
       }
-      return;
+    } else {
+      this.validateDateRange(type, date);
     }
-
-    this.validateDateRange(type, date);
   }
 
-  public validateDateRange(type: DateType, dateEntry: string): void {
-    const date = new Date(dateEntry).getTime();
-    const firstPurchaseDate = "2019-04-22";
-    const lowerDate = new Date(firstPurchaseDate).getTime();
-    const currentDate = Date.now();
-    if (date < lowerDate || currentDate < date) {
+  public validateDateRange(type: DateType, date: Date) {
+    if (!Validator.isValidDate(date)) {
       if (type === DateType.purchase) {
         this.errors.purchaseDate = `La fecha de compra no se encuentra dentro de las fechas válidas`;
       } else if (type === DateType.selling) {
@@ -223,38 +240,9 @@ export class Validation {
     }
   }
 
-  public validateCity(city: string): void {
-    const validCities = ["NEUQUÉN", "BUENOS AIRES"];
-    if (!validCities.includes(city)) {
+  public validateCity(city: string) {
+    if (!Validator.isValidCity(city)) {
       this.errors.city = `Producto debe tener una ciudad válida (Ciudad = ${city})`;
     }
-  }
-
-  public validateMetadata(
-    metadata: string,
-    value: string,
-    label: string
-  ): null | string {
-    switch (metadata) {
-      case "Opcional": {
-        return null;
-      }
-      case "Obligatorio": {
-        if (_.isEmpty(value)) {
-          return `${label} no puede estar vacío`;
-        }
-        break;
-      }
-      case "": {
-        if (!_.isEmpty(value)) {
-          return `${label} debe estar vacío`;
-        }
-        break;
-      }
-      default: {
-        return `${label} metadata incorrecto: "${metadata}"`;
-      }
-    }
-    return null;
   }
 }
