@@ -59,18 +59,16 @@ describe("Test class Dictionary", () => {
     "address",
   ];
 
-  const dictionary = new Dictionary();
-
   it("Validate length of input/output words", () => {
     expect(validInputWords.length).to.eql(validOutputWords.length);
   });
 
   it("Validate list of input words", () => {
-    expect(dictionary.inputWords()).to.eql(validInputWords);
+    expect(Dictionary.inputWords()).to.eql(validInputWords);
   });
 
   it("Validate list of output words", () => {
-    expect(dictionary.outputWords()).to.eql(validOutputWords);
+    expect(Dictionary.outputWords()).to.eql(validOutputWords);
   });
 
   it("Validate word translations", () => {
@@ -83,7 +81,7 @@ describe("Test class Dictionary", () => {
       const inputWord = inputOutputWordPair[0];
       const outputWord = inputOutputWordPair[1];
 
-      expect(dictionary.translate(inputWord)).to.eql(outputWord);
+      expect(Dictionary.translate(inputWord)).to.eql(outputWord);
     });
   });
 });
