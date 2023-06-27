@@ -2,9 +2,6 @@
   <v-app>
     <v-app-bar>
       <v-app-bar-title>KChModas</v-app-bar-title>
-      <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
       <v-btn @click="logout"> Cerrar sesión </v-btn>
     </v-app-bar>
     <v-main><slot /></v-main>
