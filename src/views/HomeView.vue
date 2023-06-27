@@ -1,11 +1,6 @@
 <template>
   <nav-bar>
     <upload-file />
-    <v-dialog v-model="dialog">
-      <v-card>
-        <v-card-title>titulo</v-card-title>
-      </v-card>
-    </v-dialog>
     <v-data-table
       :headers="headers"
       :items="tableData"

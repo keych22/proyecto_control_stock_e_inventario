@@ -2,7 +2,6 @@
   <v-app>
     <v-app-bar>
       <v-app-bar-title>KChModas</v-app-bar-title>
-      <!--      <router-link class="navbar-brand" to="/">KChModas</router-link>-->
       <v-btn icon>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
