@@ -1,12 +1,20 @@
 <template>
   <nav-bar>
     <upload-file />
+    <v-text-field
+      v-model="search"
+      append-icon="mdi-magnify"
+      label="Buscar Productos"
+      single-line
+      hide-details
+    />
     <v-data-table
       :headers="headers"
       :items="tableData"
       :items-per-page="4"
       class="elevation-1"
       item-value="product"
+      :search="search"
     >
       <template #[`item.actions`]="{ item }">
         <v-icon size="small" class="me-2" @click="editItem(item.raw)">
@@ -45,6 +53,8 @@ import { useDBStore } from "@/store/db";
 const dbStore = useDBStore();
 const dialog = ref(false);
 const selectedProduct = ref<{ key: string; entry: Entry } | null>(null);
+
+const search = ref("");
 
 const tableData = computed(() =>
   _.map(dbStore.entries, (x) => {
