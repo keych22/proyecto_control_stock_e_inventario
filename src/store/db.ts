@@ -1,9 +1,9 @@
 import {
-  addDoc,
   collection,
   doc,
   onSnapshot,
   updateDoc,
+  writeBatch,
 } from "firebase/firestore";
 import CSVFile from "@/core/csvfile";
 import type { Entry } from "@/core/core";
@@ -64,11 +64,23 @@ function storeSetup() {
         });
       }
       if (!validationErrors) {
-        let lineNumber = 1;
-        for (const entry of entries) {
-          progress(Math.ceil((lineNumber / totalEntries) * 100));
-          ++lineNumber;
-          await addDoc(collection(firebase.db, "entry"), entry);
+        const batchMaxSize = 500;
+        const numberOfBatches = Math.ceil(entries.length / batchMaxSize);
+        progress(0);
+
+        for (let batchIndex = 0; batchIndex < numberOfBatches; batchIndex++) {
+          const batch = writeBatch(firebase.db);
+          const batchSize =
+            batchIndex + 1 < numberOfBatches
+              ? batchMaxSize
+              : entries.length % 500;
+          for (let docIndex = 0; docIndex < batchSize; docIndex++) {
+            const entryIndex = batchIndex * batchMaxSize + docIndex;
+            const docRef = doc(collection(firebase.db, "entry"));
+            batch.set(docRef, entries[entryIndex]);
+          }
+          await batch.commit();
+          progress(Math.ceil(((batchIndex + 1) / numberOfBatches) * 100));
         }
       }
     }
