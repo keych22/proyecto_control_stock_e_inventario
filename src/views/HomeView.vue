@@ -84,6 +84,7 @@ function cancel() {
 }
 
 const headers = [
+  { title: "Fecha de Compra", key: "purchaseDate" },
   { title: "Ciudad", key: "city" },
   { title: "Producto", key: "product" },
   { title: "Tipo de Artículo", key: "type" },
