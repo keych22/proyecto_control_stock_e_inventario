@@ -15,7 +15,7 @@ table.set("TALLE", "size");
 table.set("PRECIO DE COMPRA", "purchasePrice");
 table.set("MESES SIN VENDER", "monthsUnsold");
 table.set("ESTADO", "state");
-table.set("FECHA", "sale_date");
+table.set("FECHA", "saleDate");
 table.set("PRECIO DE VENTA", "salePrice");
 table.set("ABONO", "credit");
 table.set("DIFERENCIA", "difference");

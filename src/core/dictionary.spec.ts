@@ -47,7 +47,7 @@ describe("Test class Dictionary", () => {
     "purchasePrice",
     "monthsUnsold",
     "state",
-    "sale_date",
+    "saleDate",
     "salePrice",
     "credit",
     "difference",
