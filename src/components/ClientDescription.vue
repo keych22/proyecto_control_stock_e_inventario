@@ -13,6 +13,7 @@
           v-model="value.telephone"
           label="Teléfono (opcional)"
           placeholder="Indique un número telefónico"
+          :rules="[Validator.isValidPhoneNumber]"
           @update:model-value="updateTelephone"
         />
       </v-col>
@@ -55,6 +56,7 @@
 <script setup lang="ts">
 import { type PropType, ref, unref } from "vue";
 import type { Entry } from "@/core/core";
+import { Validator } from "@/core/validation";
 
 const props = defineProps({
   product: { type: Object as PropType<Entry>, required: true },
