@@ -91,6 +91,7 @@ describe("Test class Validator", () => {
       expect(Validator.isValidPhoneNumber("1234567")).toBeFalsy();
       expect(Validator.isValidPhoneNumber("12345678")).toBeFalsy();
       expect(Validator.isValidPhoneNumber("123456789")).toBeFalsy();
+      expect(Validator.isValidPhoneNumber("0123456789")).toBeFalsy();
     });
   });
 
