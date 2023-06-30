@@ -29,6 +29,7 @@
         v-model="value.salePrice"
         label="Precio de venta"
         type="text"
+        :rules="[validateAmount]"
         @update:model-value="updateSalePrice"
       />
     </v-row>
