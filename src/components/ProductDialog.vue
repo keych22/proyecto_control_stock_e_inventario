@@ -34,7 +34,6 @@ function update(product: Entry) {
 }
 
 function apply() {
-  //key???
   emit("apply", props.id, newProduct);
 }
 </script>
