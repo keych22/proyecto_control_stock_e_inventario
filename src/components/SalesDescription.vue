@@ -17,6 +17,7 @@
         label="Abono"
         type="text"
         placeholder="Monto"
+        :rules="[validateAmount]"
         @update:model-value="updateCredit"
       />
     </v-row>
@@ -37,12 +38,18 @@
 <script setup lang="ts">
 import { type PropType, ref, unref } from "vue";
 import type { Entry } from "@/core/core";
+import { Validator } from "@/core/validation";
 
 const props = defineProps({
   product: { type: Object as PropType<Entry>, required: true },
 });
 
 const newProduct = unref(props.product);
+
+function validateAmount(amount: string) {
+  const value = Validator.convertAmountDecimals(amount);
+  return value !== null;
+}
 
 const emit = defineEmits<{
   (e: "update", newProduct: Entry): void;
