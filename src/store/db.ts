@@ -56,9 +56,9 @@ function storeSetup() {
         ++lineNumber;
         const validation = new ValidationError();
         validation.validate(entry);
-        _.values(validation.errors).forEach((error) => {
-          if (error) {
-            logError(`Line: ${lineNumber}. ${error}`);
+        _.values(validation.valid).forEach((valid) => {
+          if (!valid) {
+            logError(`Línea: ${lineNumber} tiene un valor inválido.`);
             validationErrors = true;
           }
         });
