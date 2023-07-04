@@ -26,7 +26,7 @@
     </v-row>
     <v-row>
       <v-text-field
-        v-model="value.salePrice"
+        v-model="value.sellingPrice"
         label="Precio de venta"
         type="text"
         :rules="[validateAmount]"
@@ -66,7 +66,7 @@ function updateCredit(credit: string) {
   emit("update", newProduct);
 }
 function updateSalePrice(salePrice: string) {
-  newProduct.salePrice = salePrice;
+  newProduct.sellingPrice = salePrice;
   emit("update", newProduct);
 }
 

@@ -147,7 +147,7 @@ describe("Test class Validation", () => {
       purchaseDate: "",
       city: "",
       category: "",
-      name: "",
+      supplier: "",
       product: "",
       type: "",
       detail: "",
@@ -159,8 +159,8 @@ describe("Test class Validation", () => {
       purchasePrice: "",
       monthsUnsold: "",
       state: "",
-      saleDate: "",
-      salePrice: "",
+      sellingDate: "",
+      sellingPrice: "",
       credit: "",
       difference: "",
       client: "",
@@ -188,7 +188,7 @@ describe("Test class Validation", () => {
 
     it.skip("Validar articulo apartado con el metodo validate_reserved_item", () => {
       entry.state = "Apartado";
-      entry.salePrice = "23.35";
+      entry.sellingPrice = "23.35";
       validation.validateReservedItem(entry);
       expect(validation.errors.client).not.to.be.null;
       expect(validation.errors.sellingPrice).not.to.be.null;
@@ -197,7 +197,7 @@ describe("Test class Validation", () => {
     it.skip("Validar articulo dañado con el metodo validate_damaged_item", () => {
       entry.state = "Dañado";
       entry.client = "Luis";
-      entry.salePrice = "23.35";
+      entry.sellingPrice = "23.35";
       entry.telephone = "1023456789";
       validation.validateDamagedItem(entry);
       expect(validation.errors).to.be.eql([

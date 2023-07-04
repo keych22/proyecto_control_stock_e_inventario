@@ -118,7 +118,7 @@ export class ValidationError {
   }
 
   public validateSupplierNameIsNotEmpty(entry: Entry): void {
-    if (_.isEmpty(entry.name)) {
+    if (_.isEmpty(entry.supplier)) {
       this.errors.supplier = "Nombre de proveedor no puede estar vacío";
     }
   }
@@ -135,7 +135,7 @@ export class ValidationError {
     }
   }
   private validateSellingPriceIsEmpty(entry: Entry): void {
-    if (!_.isEmpty(entry.salePrice)) {
+    if (!_.isEmpty(entry.sellingPrice)) {
       this.errors.sellingPrice = "Precio de venta debe estar vacío";
     }
   }
@@ -144,7 +144,7 @@ export class ValidationError {
     this.validateClientNameIsNotEmpty(entry.client);
     this.data.sellingPrice = this.convertAmountStringToCents(
       DateType.selling,
-      entry.salePrice
+      entry.sellingPrice
     );
     if (!_.isEmpty(entry.telephone)) {
       this.verifyPhoneNumber(entry.telephone);
@@ -155,7 +155,7 @@ export class ValidationError {
     this.validateClientNameIsNotEmpty(entry.client);
     this.data.sellingPrice = this.convertAmountStringToCents(
       DateType.selling,
-      entry.salePrice
+      entry.sellingPrice
     );
     if (!_.isEmpty(entry.telephone)) {
       this.verifyPhoneNumber(entry.telephone);
@@ -163,10 +163,10 @@ export class ValidationError {
   }
 
   public validateReservedItem(entry: Entry): void {
-    if (!_.isEmpty(entry.salePrice)) {
+    if (!_.isEmpty(entry.sellingPrice)) {
       this.data.sellingPrice = this.convertAmountStringToCents(
         DateType.selling,
-        entry.salePrice
+        entry.sellingPrice
       );
     }
     if (!_.isEmpty(entry.telephone)) {
@@ -177,10 +177,10 @@ export class ValidationError {
   public validateNotSoldItem(entry: Entry): void {
     this.validateClientNameIsEmpty(entry);
     this.validateNumberTelephoneIsEmpty(entry.telephone);
-    if (!_.isEmpty(entry.salePrice)) {
+    if (!_.isEmpty(entry.sellingPrice)) {
       this.data.sellingPrice = this.convertAmountStringToCents(
         DateType.selling,
-        entry.salePrice
+        entry.sellingPrice
       );
     }
   }

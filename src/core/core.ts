@@ -2,7 +2,7 @@ class Entry {
   purchaseDate: string = "";
   city: string = "";
   category: string = "";
-  name: string = "";
+  supplier: string = "";
   product: string = "";
   type: string = "";
   detail: string = "";
@@ -14,8 +14,8 @@ class Entry {
   purchasePrice: string = "";
   monthsUnsold: string = "";
   state: string = "";
-  saleDate: string = "";
-  salePrice: string = "";
+  sellingDate: string = "";
+  sellingPrice: string = "";
   credit: string = "";
   difference: string = "";
   client: string = "";
