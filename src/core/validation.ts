@@ -50,18 +50,18 @@ class Data {
 }
 
 class Valid {
-  purchaseDate: null | string = null;
-  city: null | string = null;
-  category: null | string = null;
-  supplier: null | string = null;
-  product: null | string = null;
-  purchasePrice: null | string = null;
-  state: null | string = null;
-  sellingDate: null | string = null;
-  sellingPrice: null | string = null;
-  credit: null | string = null;
-  client: null | string = null;
-  telephone: null | string = null;
+  purchaseDate: boolean = true;
+  city: boolean = true;
+  category: boolean = true;
+  supplier: boolean = true;
+  product: boolean = true;
+  purchasePrice: boolean = true;
+  state: boolean = true;
+  sellingDate: boolean = true;
+  sellingPrice: boolean = true;
+  credit: boolean = true;
+  client: boolean = true;
+  telephone: boolean = true;
 }
 
 export enum DateType {
@@ -103,37 +103,28 @@ export class ValidationError {
         break;
       }
       default:
-        this.valid.state = `Estado tiene un valor inválido: "${entry.state}"`;
+        this.valid.state = false;
     }
   }
 
   public validateNumberTelephoneIsEmpty(telephone: string): void {
-    if (!_.isEmpty(telephone)) {
-      this.valid.telephone = "El número telefónico debe estar vacío";
-    }
+    this.valid.telephone = _.isEmpty(telephone);
   }
 
   public validateSupplierNameIsNotEmpty(entry: Entry): void {
-    if (_.isEmpty(entry.supplier)) {
-      this.valid.supplier = "Nombre de proveedor no puede estar vacío";
-    }
+    this.valid.supplier = !_.isEmpty(entry.supplier);
   }
 
   public validateClientNameIsNotEmpty(name: string): void {
-    if (_.isEmpty(name)) {
-      this.valid.client = "Nombre de cliente no puede estar vacío";
-    }
+    this.valid.client = !_.isEmpty(name);
   }
 
   public validateClientNameIsEmpty(entry: Entry): void {
-    if (!_.isEmpty(entry.client)) {
-      this.valid.client = "Nombre de cliente debería estar vacío";
-    }
+    this.valid.client = _.isEmpty(entry.client);
   }
+
   private validateSellingPriceIsEmpty(entry: Entry): void {
-    if (!_.isEmpty(entry.sellingPrice)) {
-      this.valid.sellingPrice = "Precio de venta debe estar vacío";
-    }
+    this.valid.sellingPrice = _.isEmpty(entry.sellingPrice);
   }
 
   public validateSoldItem(entry: Entry): void {
@@ -198,9 +189,9 @@ export class ValidationError {
 
     if (!amount) {
       if (type === DateType.purchase) {
-        this.valid.purchasePrice = `El precio de compra esta incorrecto: "${value}"`;
+        this.valid.purchasePrice = false;
       } else if (type === DateType.selling) {
-        this.valid.sellingPrice = `El precio de venta esta incorrecto: "${value}"`;
+        this.valid.sellingPrice = false;
       }
     }
 
@@ -208,18 +199,16 @@ export class ValidationError {
   }
 
   public verifyPhoneNumber(telephone: string) {
-    if (!Validator.isValidPhoneNumber(telephone)) {
-      this.valid.telephone = `Número telefónico inválido (Teléfono: ${telephone})`;
-    }
+    this.valid.telephone = Validator.isValidPhoneNumber(telephone);
   }
 
   public validateDate(type: DateType, value: string) {
     const date = new Date(value);
     if (!date) {
       if (type === DateType.purchase) {
-        this.valid.purchaseDate = `Formato de fecha de compra incorrecto (Fecha: "${value}")`;
+        this.valid.purchaseDate = false;
       } else if (type === DateType.selling) {
-        this.valid.sellingDate = `Formato de fecha de venta incorrecto (Fecha: "${value}")`;
+        this.valid.sellingDate = false;
       }
     } else {
       this.validateDateRange(type, date);
@@ -229,16 +218,14 @@ export class ValidationError {
   public validateDateRange(type: DateType, date: Date) {
     if (!Validator.isValidDate(date)) {
       if (type === DateType.purchase) {
-        this.valid.purchaseDate = `La fecha de compra no se encuentra dentro de las fechas válidas`;
+        this.valid.purchaseDate = false;
       } else if (type === DateType.selling) {
-        this.valid.sellingDate = `La fecha de venta no se encuentra dentro de las fechas válidas`;
+        this.valid.sellingDate = false;
       }
     }
   }
 
   public validateCity(city: string) {
-    if (!Validator.isValidCity(city)) {
-      this.valid.city = `Producto debe tener una ciudad válida (Ciudad = ${city})`;
-    }
+    this.valid.city = Validator.isValidCity(city);
   }
 }
