@@ -2,6 +2,8 @@ import { Cities, type Entry, StartDate, States } from "@/core/core";
 import _ from "lodash";
 
 export class Validator {
+  public product = new Product();
+
   public static isValidCity(city: string) {
     return Cities.includes(city);
   }
@@ -47,6 +49,32 @@ export class Validator {
 class Data {
   purchasePrice: null | number = null;
   sellingPrice: null | number = null;
+}
+
+class Product {
+  purchaseDate: string = "";
+  city: string = "";
+  category: string = "";
+  supplier: string = "";
+  product: string = "";
+  type: string = "";
+  detail: string = "";
+  brand: string = "";
+  gender: string = "";
+  code: string = "";
+  color: string = "";
+  size: string = "";
+  purchasePrice: number | null = null;
+  state: string = "";
+  sellingDate: string = "";
+  sellingPrice: number | null = null;
+  credit: number | null = null;
+  client: string = "";
+  telephone: string = "";
+  delivery: string = "";
+  contact: string = "";
+  note: string = "";
+  address: string = "";
 }
 
 class Valid {
