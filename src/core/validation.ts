@@ -3,6 +3,7 @@ import _ from "lodash";
 
 export class Validator {
   public product = new Product();
+  public valid = new Valid();
 
   public static isValidCity(city: string) {
     return Cities.includes(city);
