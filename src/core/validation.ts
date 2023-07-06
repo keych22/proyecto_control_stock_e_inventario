@@ -70,7 +70,7 @@ export enum DateType {
 }
 
 export class ValidationError {
-  public data: Data = new Data();
+  public data = new Data();
   public valid = new Valid();
 
   public validate(entry: Entry) {
