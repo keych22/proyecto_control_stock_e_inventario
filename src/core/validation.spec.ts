@@ -5,27 +5,27 @@ import { beforeEach, describe, expect, it } from "vitest";
 describe("Test class Validator", () => {
   describe("Test isValidCity", () => {
     it("Test valid inputs", () => {
-      expect(Validator.isValidCity("NEUQUÉN")).toBeTruthy();
-      expect(Validator.isValidCity("BUENOS AIRES")).toBeTruthy();
+      expect(Validator.isValidCity("NEUQUÉN")).to.be.true;
+      expect(Validator.isValidCity("BUENOS AIRES")).to.be.true;
     });
 
     it("Test invalid inputs", () => {
-      expect(Validator.isValidCity("DUMMY")).toBeFalsy();
+      expect(Validator.isValidCity("DUMMY")).to.be.false;
     });
   });
 
   describe("Test isValidState", () => {
     it("Test valid inputs", () => {
-      expect(Validator.isValidState("Vendido")).toBeTruthy();
-      expect(Validator.isValidState("Credito")).toBeTruthy();
-      expect(Validator.isValidState("Apartado")).toBeTruthy();
-      expect(Validator.isValidState("SinVender")).toBeTruthy();
-      expect(Validator.isValidState("Dañado")).toBeTruthy();
-      expect(Validator.isValidState("Perdido")).toBeTruthy();
+      expect(Validator.isValidState("Vendido")).to.be.true;
+      expect(Validator.isValidState("Credito")).to.be.true;
+      expect(Validator.isValidState("Apartado")).to.be.true;
+      expect(Validator.isValidState("SinVender")).to.be.true;
+      expect(Validator.isValidState("Dañado")).to.be.true;
+      expect(Validator.isValidState("Perdido")).to.be.true;
     });
 
     it("Test invalid inputs", () => {
-      expect(Validator.isValidState("DUMMY")).toBeFalsy();
+      expect(Validator.isValidState("DUMMY")).to.be.false;
     });
   });
 
@@ -51,47 +51,47 @@ describe("Test class Validator", () => {
     const tomorrow = dateAfter(today);
 
     it("Test day before start date", () => {
-      expect(Validator.isValidDate(dayBeforeStartDate)).toBeFalsy();
+      expect(Validator.isValidDate(dayBeforeStartDate)).to.be.false;
     });
 
     it("Test start date", () => {
-      expect(Validator.isValidDate(startDate)).toBeTruthy();
+      expect(Validator.isValidDate(startDate)).to.be.true;
     });
 
     it("Test day after start date", () => {
-      expect(Validator.isValidDate(dayAfterStartDate)).toBeTruthy();
+      expect(Validator.isValidDate(dayAfterStartDate)).to.be.true;
     });
 
     it("Test yesterday", () => {
-      expect(Validator.isValidDate(yesterday)).toBeTruthy();
+      expect(Validator.isValidDate(yesterday)).to.be.true;
     });
 
     it("Test today", () => {
-      expect(Validator.isValidDate(today)).toBeTruthy();
+      expect(Validator.isValidDate(today)).to.be.true;
     });
 
     it("Test tomorrow", () => {
-      expect(Validator.isValidDate(tomorrow)).toBeFalsy();
+      expect(Validator.isValidDate(tomorrow)).to.be.false;
     });
   });
 
   describe("Test isValidPhoneNumber", () => {
     it("Test valid inputs", () => {
-      expect(Validator.isValidPhoneNumber("1234567890")).toBeTruthy();
+      expect(Validator.isValidPhoneNumber("1234567890")).to.be.true;
     });
 
     it("Test invalid inputs", () => {
-      expect(Validator.isValidPhoneNumber("")).toBeFalsy();
-      expect(Validator.isValidPhoneNumber("1")).toBeFalsy();
-      expect(Validator.isValidPhoneNumber("12")).toBeFalsy();
-      expect(Validator.isValidPhoneNumber("123")).toBeFalsy();
-      expect(Validator.isValidPhoneNumber("1234")).toBeFalsy();
-      expect(Validator.isValidPhoneNumber("12345")).toBeFalsy();
-      expect(Validator.isValidPhoneNumber("123456")).toBeFalsy();
-      expect(Validator.isValidPhoneNumber("1234567")).toBeFalsy();
-      expect(Validator.isValidPhoneNumber("12345678")).toBeFalsy();
-      expect(Validator.isValidPhoneNumber("123456789")).toBeFalsy();
-      expect(Validator.isValidPhoneNumber("0123456789")).toBeFalsy();
+      expect(Validator.isValidPhoneNumber("")).to.be.false;
+      expect(Validator.isValidPhoneNumber("1")).to.be.false;
+      expect(Validator.isValidPhoneNumber("12")).to.be.false;
+      expect(Validator.isValidPhoneNumber("123")).to.be.false;
+      expect(Validator.isValidPhoneNumber("1234")).to.be.false;
+      expect(Validator.isValidPhoneNumber("12345")).to.be.false;
+      expect(Validator.isValidPhoneNumber("123456")).to.be.false;
+      expect(Validator.isValidPhoneNumber("1234567")).to.be.false;
+      expect(Validator.isValidPhoneNumber("12345678")).to.be.false;
+      expect(Validator.isValidPhoneNumber("123456789")).to.be.false;
+      expect(Validator.isValidPhoneNumber("0123456789")).to.be.false;
     });
   });
 
@@ -131,8 +131,8 @@ describe("Test class Validator", () => {
     });
 
     it("Test invalid inputs", () => {
-      expect(Validator.convertAmountDecimals("")).toBeNull();
-      expect(Validator.convertAmountDecimals(".")).toBeNull();
+      expect(Validator.convertAmountDecimals("")).to.be.null;
+      expect(Validator.convertAmountDecimals(".")).to.be.null;
     });
   });
 });
