@@ -7,10 +7,19 @@ export class Validator {
 
   constructor(entry: Entry) {
     [this.product.city, this.valid.city] = Validator.isValidCity(entry.city);
+    [this.product.category, this.valid.category] = Validator.isValidCategory(
+      entry.category
+    );
   }
 
   public static isValidCity(city: string): [string, boolean] {
     return [city, Cities.includes(city)];
+  }
+
+  public static isValidCategory(category: string): [string, boolean] {
+    const value = category;
+    const valid = !_.isEmpty(category);
+    return [value, valid];
   }
 
   public static isValidState(state: string) {

@@ -26,6 +26,18 @@ describe("Test class Validator", () => {
     });
   });
 
+  describe("Test isValidCategory", () => {
+    it("Test valid inputs", () => {
+      const [category, valid] = Validator.isValidCategory("ROPA");
+      expect(category).to.equal("ROPA");
+      expect(valid).to.be.true;
+    });
+    it("Test invalid inputs", () => {});
+    const [category, valid] = Validator.isValidCategory("");
+    expect(category).to.equal("");
+    expect(valid).to.be.false;
+  });
+
   describe("Test isValidState", () => {
     it("Test valid inputs", () => {
       expect(Validator.isValidState("Vendido")).to.be.true;
