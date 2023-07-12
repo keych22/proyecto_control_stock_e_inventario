@@ -10,6 +10,8 @@ export class Validator {
     [this.product.category, this.valid.category] = Validator.isValidCategory(
       entry.category
     );
+    [this.product.sellingPrice, this.valid.sellingPrice] =
+      Validator.isValidSellingPrice(entry.sellingPrice, entry.state);
   }
 
   public static isValidCity(city: string): [string, boolean] {
@@ -19,6 +21,32 @@ export class Validator {
   public static isValidCategory(category: string): [string, boolean] {
     const value = category;
     const valid = !_.isEmpty(category);
+    return [value, valid];
+  }
+
+  public static isValidSellingPrice(
+    amount: string,
+    state: string
+  ): [number | null, boolean] {
+    amount = amount.trim();
+    const value = Validator.convertAmountDecimals(amount);
+    let valid = false;
+    switch (state) {
+      case "SinVender":
+        valid = _.isEmpty(amount) || !_.isNull(value);
+        break;
+      case "Vendido":
+      case "Credito":
+      case "Apartado":
+        valid = !_.isNull(value);
+        break;
+      case "Dañado":
+      case "Perdido":
+        valid = _.isEmpty(amount);
+        break;
+      default:
+        valid = false;
+    }
     return [value, valid];
   }
 
@@ -39,7 +67,7 @@ export class Validator {
     return regex.test(phoneNumber);
   }
 
-  public static convertAmountDecimals(value: string) {
+  public static convertAmountDecimals(value: string): number | null {
     const regex = /^(?<integer>\d*)(\.?)(?<decimal>\d{0,2})$/;
     const match = value.match(regex);
 

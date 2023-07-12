@@ -38,6 +38,125 @@ describe("Test class Validator", () => {
     expect(valid).to.be.false;
   });
 
+  describe("Test isValidSellingPrice", () => {
+    describe("Estado vendido", () => {
+      it("Caso válido: Debe tener un precio", () => {
+        const [sellingPrice, valid] = Validator.isValidSellingPrice(
+          "100",
+          "Vendido"
+        );
+        expect(sellingPrice).to.equal(10000);
+        expect(valid).to.be.true;
+      });
+      it("Caso inválido: Si no tiene el precio", () => {
+        const [sellingPrice, valid] = Validator.isValidSellingPrice(
+          "",
+          "Vendido"
+        );
+        expect(sellingPrice).is.null;
+        expect(valid).to.be.false;
+      });
+    });
+    describe("Estado crédito", () => {
+      it("Caso válido: Debe tener un precio", () => {
+        const [sellingPrice, valid] = Validator.isValidSellingPrice(
+          "100",
+          "Credito"
+        );
+        expect(sellingPrice).to.equal(10000);
+        expect(valid).to.be.true;
+      });
+      it("Caso inválido: Si no tiene el precio", () => {
+        const [sellingPrice, valid] = Validator.isValidSellingPrice(
+          "",
+          "Credito"
+        );
+        expect(sellingPrice).is.null;
+        expect(valid).to.be.false;
+      });
+    });
+    describe("Estado apartado", () => {
+      it("Caso válido: Debe tener un precio", () => {
+        const [sellingPrice, valid] = Validator.isValidSellingPrice(
+          "100",
+          "Apartado"
+        );
+        expect(sellingPrice).to.equal(10000);
+        expect(valid).to.be.true;
+      });
+      it("Caso inválido: Si no tiene el precio", () => {
+        const [sellingPrice, valid] = Validator.isValidSellingPrice(
+          "",
+          "Apartado"
+        );
+        expect(sellingPrice).is.null;
+        expect(valid).to.be.false;
+      });
+    });
+    describe("Estado SinVender", () => {
+      it("Caso válido: Sin precio", () => {
+        const [sellingPrice, valid] = Validator.isValidSellingPrice(
+          "",
+          "SinVender"
+        );
+        expect(sellingPrice).is.null;
+        expect(valid).to.be.true;
+      });
+      it("Caso válido: Con precio", () => {
+        const [sellingPrice, valid] = Validator.isValidSellingPrice(
+          "100",
+          "SinVender"
+        );
+        expect(sellingPrice).to.equal(10000);
+        expect(valid).to.be.true;
+      });
+      it("Caso inválido: Valor alfanumérico", () => {
+        const [sellingPrice, valid] = Validator.isValidSellingPrice(
+          "a1",
+          "SinVender"
+        );
+        expect(sellingPrice).to.equal(null);
+        expect(valid).to.be.false;
+      });
+    });
+    describe("Estado Dañado", () => {
+      it("Caso válido: Sin precio", () => {
+        const [sellingPrice, valid] = Validator.isValidSellingPrice(
+          "",
+          "Dañado"
+        );
+        expect(sellingPrice).is.null;
+        expect(valid).to.be.true;
+      });
+      it("Caso inválido: Si tiene un precio", () => {
+        const [sellingPrice, valid] = Validator.isValidSellingPrice(
+          "100",
+          "Dañado"
+        );
+        expect(sellingPrice).to.equal(10000);
+        expect(valid).to.be.false;
+      });
+    });
+    describe("Estado Perdido", () => {
+      it("Caso válido: Sin precio", () => {
+        const [sellingPrice, valid] = Validator.isValidSellingPrice(
+          "",
+          "Perdido"
+        );
+        expect(sellingPrice).is.null;
+        expect(valid).to.be.true;
+      });
+      it("Caso inválido: Si tiene un precio", () => {
+        const [sellingPrice, valid] = Validator.isValidSellingPrice(
+          "100",
+          "Perdido"
+        );
+        expect(sellingPrice).to.equal(10000);
+        expect(valid).to.be.false;
+      });
+    });
+  });
+
   describe("Test isValidState", () => {
     it("Test valid inputs", () => {
       expect(Validator.isValidState("Vendido")).to.be.true;
