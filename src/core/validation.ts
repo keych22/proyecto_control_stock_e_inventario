@@ -5,9 +5,14 @@ export class Validator {
   public product = new Product();
   public valid = new Valid();
 
-  public static isValidCity(city: string) {
-    return Cities.includes(city);
+  constructor(entry: Entry) {
+    [this.product.city, this.valid.city] = Validator.isValidCity(entry.city);
   }
+
+  public static isValidCity(city: string): [string, boolean] {
+    return [city, Cities.includes(city)];
+  }
+
   public static isValidState(state: string) {
     return States.includes(state);
   }
@@ -103,7 +108,6 @@ export class ValidationError {
   public valid = new Valid();
 
   public validate(entry: Entry) {
-    this.validateCity(entry.city);
     this.validateDate(DateType.purchase, entry.purchaseDate);
     this.validateSupplierNameIsNotEmpty(entry);
     switch (entry.state) {
@@ -252,9 +256,5 @@ export class ValidationError {
         this.valid.sellingDate = false;
       }
     }
-  }
-
-  public validateCity(city: string) {
-    this.valid.city = Validator.isValidCity(city);
   }
 }

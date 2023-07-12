@@ -4,13 +4,25 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 describe("Test class Validator", () => {
   describe("Test isValidCity", () => {
-    it("Test valid inputs", () => {
-      expect(Validator.isValidCity("NEUQUÉN")).to.be.true;
-      expect(Validator.isValidCity("BUENOS AIRES")).to.be.true;
+    it("Test valid input", () => {
+      const [city, valid] = Validator.isValidCity("NEUQUÉN");
+      expect(city).to.equal("NEUQUÉN");
+      expect(valid).to.be.true;
     });
-
-    it("Test invalid inputs", () => {
-      expect(Validator.isValidCity("DUMMY")).to.be.false;
+    it("Test valid input", () => {
+      const [city, valid] = Validator.isValidCity("BUENOS AIRES");
+      expect(city).to.equal("BUENOS AIRES");
+      expect(valid).to.be.true;
+    });
+    it("Test invalid input", () => {
+      const [city, valid] = Validator.isValidCity("DUMMY");
+      expect(city).to.equal("DUMMY");
+      expect(valid).to.be.false;
+    });
+    it("Test invalid input", () => {
+      const [city, valid] = Validator.isValidCity("");
+      expect(city).to.equal("");
+      expect(valid).to.be.false;
     });
   });
 
