@@ -12,6 +12,9 @@ export class Validator {
     );
     [this.product.sellingPrice, this.valid.sellingPrice] =
       Validator.isValidSellingPrice(entry.sellingPrice, entry.state);
+    [this.product.product, this.valid.product] = Validator.isValidProduct(
+      entry.product
+    );
   }
 
   public static isValidCity(city: string): [string, boolean] {
@@ -47,6 +50,12 @@ export class Validator {
       default:
         valid = false;
     }
+    return [value, valid];
+  }
+
+  public static isValidProduct(product: string): [string, boolean] {
+    const value = product;
+    const valid = !_.isEmpty(product);
     return [value, valid];
   }
 

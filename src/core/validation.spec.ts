@@ -32,10 +32,11 @@ describe("Test class Validator", () => {
       expect(category).to.equal("ROPA");
       expect(valid).to.be.true;
     });
-    it("Test invalid inputs", () => {});
-    const [category, valid] = Validator.isValidCategory("");
-    expect(category).to.equal("");
-    expect(valid).to.be.false;
+    it("Test invalid inputs", () => {
+      const [category, valid] = Validator.isValidCategory("");
+      expect(category).to.equal("");
+      expect(valid).to.be.false;
+    });
   });
 
   describe("Test isValidSellingPrice", () => {
@@ -154,6 +155,19 @@ describe("Test class Validator", () => {
         expect(sellingPrice).to.equal(10000);
         expect(valid).to.be.false;
       });
+    });
+  });
+
+  describe("Test isValidProduct", () => {
+    it("Test valid inputs", () => {
+      const [product, valid] = Validator.isValidProduct("PANTALON");
+      expect(product).to.equal("PANTALON");
+      expect(valid).to.be.true;
+    });
+    it("Test invalid inputs", () => {
+      const [product, valid] = Validator.isValidProduct("");
+      expect(product).to.equal("");
+      expect(valid).to.be.false;
     });
   });
 
