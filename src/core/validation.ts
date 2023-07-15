@@ -17,6 +17,9 @@ export class Validator {
     );
     [this.product.purchasePrice, this.valid.purchasePrice] =
       Validator.isValidPurchasePrice(entry.purchasePrice);
+    [this.product.state, this.valid.state] = Validator.isValidState(
+      entry.state
+    );
   }
 
   public static isValidCity(city: string): [string, boolean] {
@@ -67,9 +70,12 @@ export class Validator {
     return [value, valid];
   }
 
-  public static isValidState(state: string) {
-    return States.includes(state);
+  public static isValidState(state: string): [string, boolean] {
+    const value = state;
+    const valid = States.includes(state);
+    return [value, valid];
   }
+
   public static isValidDate(date: Date) {
     const value = date.getTime();
 

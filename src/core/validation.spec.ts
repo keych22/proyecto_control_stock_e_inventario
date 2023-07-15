@@ -190,17 +190,50 @@ describe("Test class Validator", () => {
   });
 
   describe("Test isValidState", () => {
-    it("Test valid inputs", () => {
-      expect(Validator.isValidState("Vendido")).to.be.true;
-      expect(Validator.isValidState("Credito")).to.be.true;
-      expect(Validator.isValidState("Apartado")).to.be.true;
-      expect(Validator.isValidState("SinVender")).to.be.true;
-      expect(Validator.isValidState("Dañado")).to.be.true;
-      expect(Validator.isValidState("Perdido")).to.be.true;
+    describe("Estados válidos", () => {
+      it("Vendido", () => {
+        const [value, valid] = Validator.isValidState("Vendido");
+        expect(value).is.equal("Vendido");
+        expect(valid).to.be.true;
+      });
+      it("Credito", () => {
+        const [value, valid] = Validator.isValidState("Credito");
+        expect(value).is.equal("Credito");
+        expect(valid).to.be.true;
+      });
+      it("Apartado", () => {
+        const [value, valid] = Validator.isValidState("Apartado");
+        expect(value).is.equal("Apartado");
+        expect(valid).to.be.true;
+      });
+      it("SinVender", () => {
+        const [value, valid] = Validator.isValidState("SinVender");
+        expect(value).is.equal("SinVender");
+        expect(valid).to.be.true;
+      });
+      it("Dañado", () => {
+        const [value, valid] = Validator.isValidState("Dañado");
+        expect(value).is.equal("Dañado");
+        expect(valid).to.be.true;
+      });
+      it("Perdido", () => {
+        const [value, valid] = Validator.isValidState("Perdido");
+        expect(value).is.equal("Perdido");
+        expect(valid).to.be.true;
+      });
     });
 
-    it("Test invalid inputs", () => {
-      expect(Validator.isValidState("DUMMY")).to.be.false;
+    describe("Estados inválidos", () => {
+      it("DUMMY", () => {
+        const [value, valid] = Validator.isValidState("DUMMY");
+        expect(value).is.equal("DUMMY");
+        expect(valid).to.be.false;
+      });
+      it("", () => {
+        const [value, valid] = Validator.isValidState("");
+        expect(value).is.equal("");
+        expect(valid).to.be.false;
+      });
     });
   });
 
