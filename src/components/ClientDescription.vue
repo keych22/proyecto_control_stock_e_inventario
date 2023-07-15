@@ -13,7 +13,7 @@
           v-model="value.telephone"
           label="Teléfono (opcional)"
           placeholder="Indique un número telefónico"
-          :rules="[Validator.isValidPhoneNumber]"
+          :rules="[Validator.isValidTelephone]"
           @update:model-value="updateTelephone"
         />
       </v-col>

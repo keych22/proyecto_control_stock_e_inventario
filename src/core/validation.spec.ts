@@ -237,6 +237,96 @@ describe("Test class Validator", () => {
     });
   });
 
+  describe("Test isValidSellingDate", () => {
+    describe("Test valid inputs", () => {
+      it("Caso posible 1", () => {
+        const [value, valid] = Validator.isValidSellingDate(
+          "2019-04-22",
+          "2019-04-22"
+        );
+        expect(value).is.equal("2019-04-22");
+        expect(valid).to.be.true;
+      });
+      it("Caso posible 2", () => {
+        const [value, valid] = Validator.isValidSellingDate(
+          "2022-04-30",
+          "2022-04-29"
+        );
+        expect(value).is.equal("2022-04-30");
+        expect(valid).to.be.true;
+      });
+      it("Caso posible 3", () => {
+        const [value, valid] = Validator.isValidSellingDate(
+          "2023-07-16",
+          "2023-07-15"
+        );
+        expect(value).is.equal("2023-07-16");
+        expect(valid).to.be.true;
+      });
+    });
+    describe("Test invalid inputs", () => {
+      it("Caso posible 1", () => {
+        const [value, valid] = Validator.isValidSellingDate(
+          "2018-07-17",
+          "2018-06-20"
+        );
+        expect(value).is.equal("2018-07-17");
+        expect(valid).to.be.false;
+      });
+      it("Caso posible 2", () => {
+        const [value, valid] = Validator.isValidSellingDate("", "2018-06-20");
+        expect(value).is.equal("");
+        expect(valid).to.be.false;
+      });
+    });
+  });
+
+  describe("Test isValidPurchaseDate", () => {
+    function getNextDay(date: string | Date) {
+      const givenDay = new Date(date);
+      const nextDay = new Date(givenDay);
+      nextDay.setDate(nextDay.getDate() + 1);
+
+      const year = nextDay.getFullYear();
+      const month = String(nextDay.getMonth() + 1).padStart(2, "0");
+      const day = String(nextDay.getDate()).padStart(2, "0");
+      const nextDayString = `${year}-${month}-${day}`;
+
+      return nextDayString;
+    }
+    function convertDate(date: Date | string) {
+      const givenDay = new Date(date);
+      const converGivenDay = givenDay.toISOString().split("T")[0];
+      return converGivenDay;
+    }
+    const today = convertDate(new Date());
+    const tomorrow = getNextDay(today);
+    describe("Test valid inputs", () => {
+      it("Test valid inputs", () => {
+        const [value, valid] = Validator.isValidPurchaseDate(today);
+        expect(value).is.equal(today);
+        expect(valid).to.be.true;
+      });
+      it("Test valid inputs", () => {
+        const [value, valid] = Validator.isValidPurchaseDate("2019-04-22");
+        expect(value).is.equal("2019-04-22");
+        expect(valid).to.be.true;
+      });
+      it("Test valid inputs", () => {
+        const [value, valid] = Validator.isValidPurchaseDate("2022-04-30");
+        expect(value).is.equal("2022-04-30");
+        expect(valid).to.be.true;
+      });
+    });
+    describe("Test invalid inputs", () => {
+      it("Test invalid inputs", () => {
+        const [value, valid] = Validator.isValidPurchaseDate(tomorrow);
+        expect(value).is.equal(tomorrow);
+        expect(valid).to.be.false;
+      });
+    });
+  });
+
   describe("Test isValidDate", () => {
     function dateBefore(date: Date) {
       const dateBefore = new Date(date);
@@ -283,65 +373,174 @@ describe("Test class Validator", () => {
     });
   });
 
-  describe("Test isValidPhoneNumber", () => {
-    it("Test valid inputs", () => {
-      expect(Validator.isValidPhoneNumber("1234567890")).to.be.true;
+  describe("Test isValidTelephone", () => {
+    describe("Estado Vendido", () => {
+      describe("Casos válidos", () => {
+        it("Número telefónico con 10 dígitos", () => {
+          const [value, valid] = Validator.isValidTelephone(
+            "1234567890",
+            "Vendido"
+          );
+          expect(value).is.equal("1234567890");
+          expect(valid).to.be.true;
+        });
+        it("Número telefónico vacío", () => {
+          const [value, valid] = Validator.isValidTelephone("", "Vendido");
+          expect(value).is.equal("");
+          expect(valid).to.be.true;
+        });
+      });
+      describe("Casos inválidos", () => {
+        it("Números telefónicos con cantidad de dígitos distinto a 10", () => {
+          const [value, valid] = Validator.isValidTelephone("1", "Vendido");
+          expect(value).is.equal("1");
+          expect(valid).to.be.false;
+        });
+        it("Números telefónicos alfanuméricos", () => {
+          const [value, valid] = Validator.isValidTelephone("1f", "Vendido");
+          expect(value).is.equal("1f");
+          expect(valid).to.be.false;
+        });
+      });
+    });
+    describe("Estado Crédito", () => {
+      describe("Casos válidos", () => {
+        it("Número telefónico con 10 dígitos", () => {
+          const [value, valid] = Validator.isValidTelephone(
+            "1234567890",
+            "Credito"
+          );
+          expect(value).is.equal("1234567890");
+          expect(valid).to.be.true;
+        });
+        it("Número telefónico vacío", () => {
+          const [value, valid] = Validator.isValidTelephone("", "Credito");
+          expect(value).is.equal("");
+          expect(valid).to.be.true;
+        });
+      });
+      describe("Casos inválidos", () => {
+        it("Números telefónicos con cantidad de dígitos distinto a 10", () => {
+          const [value, valid] = Validator.isValidTelephone("1", "Credito");
+          expect(value).is.equal("1");
+          expect(valid).to.be.false;
+        });
+        it("Números telefónicos alfanuméricos", () => {
+          const [value, valid] = Validator.isValidTelephone("1f", "Credito");
+          expect(value).is.equal("1f");
+          expect(valid).to.be.false;
+        });
+      });
     });
 
-    it("Test invalid inputs", () => {
-      expect(Validator.isValidPhoneNumber("")).to.be.false;
-      expect(Validator.isValidPhoneNumber("1")).to.be.false;
-      expect(Validator.isValidPhoneNumber("12")).to.be.false;
-      expect(Validator.isValidPhoneNumber("123")).to.be.false;
-      expect(Validator.isValidPhoneNumber("1234")).to.be.false;
-      expect(Validator.isValidPhoneNumber("12345")).to.be.false;
-      expect(Validator.isValidPhoneNumber("123456")).to.be.false;
-      expect(Validator.isValidPhoneNumber("1234567")).to.be.false;
-      expect(Validator.isValidPhoneNumber("12345678")).to.be.false;
-      expect(Validator.isValidPhoneNumber("123456789")).to.be.false;
-      expect(Validator.isValidPhoneNumber("0123456789")).to.be.false;
+    describe("Estado Apartado", () => {
+      describe("Casos válidos", () => {
+        it("Número telefónico con 10 dígitos", () => {
+          const [value, valid] = Validator.isValidTelephone(
+            "1234567890",
+            "Apartado"
+          );
+          expect(value).is.equal("1234567890");
+          expect(valid).to.be.true;
+        });
+        it("Número telefónico vacío", () => {
+          const [value, valid] = Validator.isValidTelephone("", "Apartado");
+          expect(value).is.equal("");
+          expect(valid).to.be.true;
+        });
+      });
+      describe("Casos inválidos", () => {
+        it("Números telefónicos con cantidad de dígitos distinto a 10", () => {
+          const [value, valid] = Validator.isValidTelephone("1", "Apartado");
+          expect(value).is.equal("1");
+          expect(valid).to.be.false;
+        });
+        it("Números telefónicos alfanuméricos", () => {
+          const [value, valid] = Validator.isValidTelephone("1f", "Apartado");
+          expect(value).is.equal("1f");
+          expect(valid).to.be.false;
+        });
+      });
+    });
+
+    describe("Estado SinVender", () => {
+      it("Caso válido: número debe estar vacío", () => {
+        const [value, valid] = Validator.isValidTelephone("", "SinVender");
+        expect(value).is.equal("");
+        expect(valid).to.be.true;
+      });
+      it("Caso inválido: campo con dígitos", () => {
+        const [value, valid] = Validator.isValidTelephone("12", "SinVender");
+        expect(value).is.equal("12");
+        expect(valid).to.be.false;
+      });
+    });
+    describe("Estado Dañado", () => {
+      it("Caso válido: número debe estar vacío", () => {
+        const [value, valid] = Validator.isValidTelephone("", "Dañado");
+        expect(value).is.equal("");
+        expect(valid).to.be.true;
+      });
+      it("Caso inválido: campo con dígitos", () => {
+        const [value, valid] = Validator.isValidTelephone("12", "Dañado");
+        expect(value).is.equal("12");
+        expect(valid).to.be.false;
+      });
+    });
+
+    describe("Estado Perdido", () => {
+      it("Caso válido: número debe estar vacío", () => {
+        const [value, valid] = Validator.isValidTelephone("", "Perdido");
+        expect(value).is.equal("");
+        expect(valid).to.be.true;
+      });
+      it("Caso inválido: campo con dígitos", () => {
+        const [value, valid] = Validator.isValidTelephone("12", "Perdido");
+        expect(value).is.equal("12");
+        expect(valid).to.be.false;
+      });
     });
   });
+});
 
-  describe("Test convertAmount", () => {
-    it("Test valid inputs", () => {
-      expect(Validator.convertAmountDecimals("0")).to.be.eql(0);
+describe("Test convertAmount", () => {
+  it("Test valid inputs", () => {
+    expect(Validator.convertAmountDecimals("0")).to.be.eql(0);
 
-      expect(Validator.convertAmountDecimals(".0")).to.be.eql(0);
-      expect(Validator.convertAmountDecimals(".1")).to.be.eql(10);
-      expect(Validator.convertAmountDecimals(".2")).to.be.eql(20);
+    expect(Validator.convertAmountDecimals(".0")).to.be.eql(0);
+    expect(Validator.convertAmountDecimals(".1")).to.be.eql(10);
+    expect(Validator.convertAmountDecimals(".2")).to.be.eql(20);
 
-      expect(Validator.convertAmountDecimals(".00")).to.be.eql(0);
-      expect(Validator.convertAmountDecimals(".10")).to.be.eql(10);
-      expect(Validator.convertAmountDecimals(".20")).to.be.eql(20);
+    expect(Validator.convertAmountDecimals(".00")).to.be.eql(0);
+    expect(Validator.convertAmountDecimals(".10")).to.be.eql(10);
+    expect(Validator.convertAmountDecimals(".20")).to.be.eql(20);
 
-      expect(Validator.convertAmountDecimals(".01")).to.be.eql(1);
-      expect(Validator.convertAmountDecimals(".02")).to.be.eql(2);
-      expect(Validator.convertAmountDecimals(".12")).to.be.eql(12);
+    expect(Validator.convertAmountDecimals(".01")).to.be.eql(1);
+    expect(Validator.convertAmountDecimals(".02")).to.be.eql(2);
+    expect(Validator.convertAmountDecimals(".12")).to.be.eql(12);
 
-      expect(Validator.convertAmountDecimals("0.")).to.be.eql(0);
-      expect(Validator.convertAmountDecimals("1.")).to.be.eql(100);
-      expect(Validator.convertAmountDecimals("2.")).to.be.eql(200);
+    expect(Validator.convertAmountDecimals("0.")).to.be.eql(0);
+    expect(Validator.convertAmountDecimals("1.")).to.be.eql(100);
+    expect(Validator.convertAmountDecimals("2.")).to.be.eql(200);
 
-      expect(Validator.convertAmountDecimals("00.")).to.be.eql(0);
-      expect(Validator.convertAmountDecimals("10.")).to.be.eql(1000);
-      expect(Validator.convertAmountDecimals("20.")).to.be.eql(2000);
+    expect(Validator.convertAmountDecimals("00.")).to.be.eql(0);
+    expect(Validator.convertAmountDecimals("10.")).to.be.eql(1000);
+    expect(Validator.convertAmountDecimals("20.")).to.be.eql(2000);
 
-      expect(Validator.convertAmountDecimals("01.")).to.be.eql(100);
-      expect(Validator.convertAmountDecimals("02.")).to.be.eql(200);
+    expect(Validator.convertAmountDecimals("01.")).to.be.eql(100);
+    expect(Validator.convertAmountDecimals("02.")).to.be.eql(200);
 
-      expect(Validator.convertAmountDecimals("0.0")).to.be.eql(0);
-      expect(Validator.convertAmountDecimals("0.01")).to.be.eql(1);
-      expect(Validator.convertAmountDecimals("0.1")).to.be.eql(10);
-      expect(Validator.convertAmountDecimals("1.0")).to.be.eql(100);
-      expect(Validator.convertAmountDecimals("1.1")).to.be.eql(110);
-      expect(Validator.convertAmountDecimals("1.01")).to.be.eql(101);
-    });
+    expect(Validator.convertAmountDecimals("0.0")).to.be.eql(0);
+    expect(Validator.convertAmountDecimals("0.01")).to.be.eql(1);
+    expect(Validator.convertAmountDecimals("0.1")).to.be.eql(10);
+    expect(Validator.convertAmountDecimals("1.0")).to.be.eql(100);
+    expect(Validator.convertAmountDecimals("1.1")).to.be.eql(110);
+    expect(Validator.convertAmountDecimals("1.01")).to.be.eql(101);
+  });
 
-    it("Test invalid inputs", () => {
-      expect(Validator.convertAmountDecimals("")).to.be.null;
-      expect(Validator.convertAmountDecimals(".")).to.be.null;
-    });
+  it("Test invalid inputs", () => {
+    expect(Validator.convertAmountDecimals("")).to.be.null;
+    expect(Validator.convertAmountDecimals(".")).to.be.null;
   });
 });
 
@@ -413,23 +612,6 @@ describe("Test class Validation", () => {
         "Precio de venta debe estar vacio",
         "El numero telefonico debe estar vacio",
       ]);
-    });
-  });
-
-  describe("Validar metodo verifyPhoneNumber", () => {
-    it.skip("Verificar formato 1", () => {
-      validation.verifyPhoneNumber("1234567809");
-      expect(validation.valid).to.empty;
-    });
-
-    it.skip("Verificar formato 2 comienza con 0", () => {
-      validation.verifyPhoneNumber("0234567898");
-      expect(validation.valid).to.eql(["Numero telefonico invalido"]);
-    });
-
-    it.skip("Verificar si numero telefonico NO esta vacio", () => {
-      validation.verifyPhoneNumber("");
-      expect(validation.valid).to.eql(["Numero telefonico invalido"]);
     });
   });
 

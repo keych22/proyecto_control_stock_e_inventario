@@ -20,6 +20,10 @@ export class Validator {
     [this.product.state, this.valid.state] = Validator.isValidState(
       entry.state
     );
+    [this.product.telephone, this.valid.telephone] = Validator.isValidTelephone(
+      entry.telephone,
+      entry.state
+    );
   }
 
   public static isValidCity(city: string): [string, boolean] {
@@ -76,6 +80,51 @@ export class Validator {
     return [value, valid];
   }
 
+  public static isValidClient(
+    client: string,
+    state: string
+  ): [string, boolean] {
+    const value = client;
+    let valid = false;
+    switch (state) {
+      case "Credito":
+      case "Apartado":
+        valid = !_.isEmpty(value);
+        break;
+      case "Vendido":
+        valid = _.isEmpty(value) || !_.isEmpty(value); // O colocar simplemente valid = true; ??
+        break;
+      case "SinVender":
+      case "Dañado":
+      case "Perdido":
+        valid = _.isEmpty(value);
+        break;
+      default:
+        valid = false;
+    }
+    return [value, valid];
+  }
+
+  public static isValidSellingDate(
+    sellingDate: string | Date,
+    purchaseDate: string
+  ): [string | Date, boolean] {
+    const valueSellingDate = new Date(sellingDate);
+    const valuePurchaseDate = new Date(purchaseDate);
+    const valid =
+      valueSellingDate >= valuePurchaseDate &&
+      Validator.isValidDate(valueSellingDate);
+    return [sellingDate, valid];
+  }
+
+  public static isValidPurchaseDate(
+    date: string | Date
+  ): [string | Date, boolean] {
+    const value = new Date(date);
+    const valid = Validator.isValidDate(value);
+    return [date, valid];
+  }
+
   public static isValidDate(date: Date) {
     const value = date.getTime();
 
@@ -85,9 +134,28 @@ export class Validator {
     return lowerBound <= value && value <= upperBound;
   }
 
-  public static isValidPhoneNumber(phoneNumber: string) {
+  public static isValidTelephone(
+    telephone: string,
+    state: string
+  ): [string, boolean] {
     const regex = /^[1-9]\d{9}$/;
-    return regex.test(phoneNumber);
+    const value = telephone;
+    let valid = false;
+    switch (state) {
+      case "Vendido":
+      case "Credito":
+      case "Apartado":
+        valid = regex.test(telephone) || _.isEmpty(telephone);
+        break;
+      case "SinVender":
+      case "Dañado":
+      case "Perdido":
+        valid = _.isEmpty(telephone);
+        break;
+      default:
+        valid = false;
+    }
+    return [value, valid];
   }
 
   public static convertAmountDecimals(value: string): number | null {
@@ -118,7 +186,7 @@ class Data {
 }
 
 class Product {
-  purchaseDate: string = "";
+  purchaseDate: Date | string = "";
   city: string = "";
   category: string = "";
   supplier: string = "";
@@ -132,7 +200,7 @@ class Product {
   size: string = "";
   purchasePrice: number | null = null;
   state: string = "";
-  sellingDate: string = "";
+  sellingDate: Date | string = "";
   sellingPrice: number | null = null;
   credit: number | null = null;
   client: string = "";
@@ -226,9 +294,6 @@ export class ValidationError {
       DateType.selling,
       entry.sellingPrice
     );
-    if (!_.isEmpty(entry.telephone)) {
-      this.verifyPhoneNumber(entry.telephone);
-    }
   }
 
   public validateOnCreditItem(entry: Entry): void {
@@ -237,9 +302,6 @@ export class ValidationError {
       DateType.selling,
       entry.sellingPrice
     );
-    if (!_.isEmpty(entry.telephone)) {
-      this.verifyPhoneNumber(entry.telephone);
-    }
   }
 
   public validateReservedItem(entry: Entry): void {
@@ -248,9 +310,6 @@ export class ValidationError {
         DateType.selling,
         entry.sellingPrice
       );
-    }
-    if (!_.isEmpty(entry.telephone)) {
-      this.verifyPhoneNumber(entry.telephone);
     }
   }
 
@@ -289,10 +348,6 @@ export class ValidationError {
     }
 
     return amount;
-  }
-
-  public verifyPhoneNumber(telephone: string) {
-    this.valid.telephone = Validator.isValidPhoneNumber(telephone);
   }
 
   public validateDate(type: DateType, value: string) {
