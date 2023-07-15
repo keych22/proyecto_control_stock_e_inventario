@@ -15,6 +15,8 @@ export class Validator {
     [this.product.product, this.valid.product] = Validator.isValidProduct(
       entry.product
     );
+    [this.product.purchasePrice, this.valid.purchasePrice] =
+      Validator.isValidPurchasePrice(entry.purchasePrice);
   }
 
   public static isValidCity(city: string): [string, boolean] {
@@ -56,6 +58,12 @@ export class Validator {
   public static isValidProduct(product: string): [string, boolean] {
     const value = product;
     const valid = !_.isEmpty(product);
+    return [value, valid];
+  }
+
+  public static isValidPurchasePrice(price: string): [number | null, boolean] {
+    const value = Validator.convertAmountDecimals(price);
+    const valid = !_.isNull(value);
     return [value, valid];
   }
 

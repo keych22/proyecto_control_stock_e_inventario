@@ -171,6 +171,24 @@ describe("Test class Validator", () => {
     });
   });
 
+  describe("Test isValidPurchasePrice", () => {
+    it("Test valid inputs", () => {
+      const [value, valid] = Validator.isValidPurchasePrice("100");
+      expect(value).to.equal(10000);
+      expect(valid).to.be.true;
+    });
+    it("Test invalid inputs", () => {
+      const [value, valid] = Validator.isValidPurchasePrice("");
+      expect(value).is.null;
+      expect(valid).to.be.false;
+    });
+    it("Test invalid inputs", () => {
+      const [value, valid] = Validator.isValidPurchasePrice("a100");
+      expect(value).is.null;
+      expect(valid).to.be.false;
+    });
+  });
+
   describe("Test isValidState", () => {
     it("Test valid inputs", () => {
       expect(Validator.isValidState("Vendido")).to.be.true;
