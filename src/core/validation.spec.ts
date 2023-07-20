@@ -237,91 +237,65 @@ describe("Test class Validator", () => {
     });
   });
 
-  describe("Test isValidSellingDate", () => {
+  describe("Test isValidCredit", () => {
     describe("Test valid inputs", () => {
-      it("Caso posible 1", () => {
-        const [value, valid] = Validator.isValidSellingDate(
-          "2019-04-22",
-          "2019-04-22"
-        );
-        expect(value).is.equal("2019-04-22");
+      it("Monto del crédito inferior al precio de venta", () => {
+        const [credit, valid] = Validator.isValidCredit("90", "100", "Credito");
+        expect(credit).is.equal(9000);
         expect(valid).to.be.true;
       });
-      it("Caso posible 2", () => {
-        const [value, valid] = Validator.isValidSellingDate(
-          "2022-04-30",
-          "2022-04-29"
-        );
-        expect(value).is.equal("2022-04-30");
+      it("Monto del crédito vacío", () => {
+        const [credit, valid] = Validator.isValidCredit("", "100", "Credito");
+        expect(credit).is.null;
         expect(valid).to.be.true;
       });
-      it("Caso posible 3", () => {
-        const [value, valid] = Validator.isValidSellingDate(
-          "2023-07-16",
-          "2023-07-15"
-        );
-        expect(value).is.equal("2023-07-16");
+      it("Monto del crédito y el precio de venta vacíos", () => {
+        const [credit, valid] = Validator.isValidCredit("", "", "Credito");
+        expect(credit).is.null;
         expect(valid).to.be.true;
       });
     });
     describe("Test invalid inputs", () => {
-      it("Caso posible 1", () => {
-        const [value, valid] = Validator.isValidSellingDate(
-          "2018-07-17",
-          "2018-06-20"
+      it("Monto del crédito igual al precio de venta", () => {
+        const [credit, valid] = Validator.isValidCredit(
+          "100",
+          "100",
+          "Credito"
         );
-        expect(value).is.equal("2018-07-17");
+        expect(credit).is.equal(10000);
         expect(valid).to.be.false;
       });
-      it("Caso posible 2", () => {
-        const [value, valid] = Validator.isValidSellingDate("", "2018-06-20");
-        expect(value).is.equal("");
+      it("Monto del crédito con valor en estado Vendido", () => {
+        const [credit, valid] = Validator.isValidCredit("50", "100", "Vendido");
+        expect(credit).is.equal(5000);
         expect(valid).to.be.false;
       });
-    });
-  });
-
-  describe("Test isValidPurchaseDate", () => {
-    function getNextDay(date: string | Date) {
-      const givenDay = new Date(date);
-      const nextDay = new Date(givenDay);
-      nextDay.setDate(nextDay.getDate() + 1);
-
-      const year = nextDay.getFullYear();
-      const month = String(nextDay.getMonth() + 1).padStart(2, "0");
-      const day = String(nextDay.getDate()).padStart(2, "0");
-      const nextDayString = `${year}-${month}-${day}`;
-
-      return nextDayString;
-    }
-    function convertDate(date: Date | string) {
-      const givenDay = new Date(date);
-      const converGivenDay = givenDay.toISOString().split("T")[0];
-      return converGivenDay;
-    }
-    const today = convertDate(new Date());
-    const tomorrow = getNextDay(today);
-    describe("Test valid inputs", () => {
-      it("Test valid inputs", () => {
-        const [value, valid] = Validator.isValidPurchaseDate(today);
-        expect(value).is.equal(today);
-        expect(valid).to.be.true;
+      it("Monto del crédito con valor en estado Apartado", () => {
+        const [credit, valid] = Validator.isValidCredit(
+          "50",
+          "100",
+          "Apartado"
+        );
+        expect(credit).is.equal(5000);
+        expect(valid).to.be.false;
       });
-      it("Test valid inputs", () => {
-        const [value, valid] = Validator.isValidPurchaseDate("2019-04-22");
-        expect(value).is.equal("2019-04-22");
-        expect(valid).to.be.true;
+      it("Monto del crédito con valor en estado SinVender", () => {
+        const [credit, valid] = Validator.isValidCredit(
+          "50",
+          "100",
+          "SinVender"
+        );
+        expect(credit).is.equal(5000);
+        expect(valid).to.be.false;
       });
-      it("Test valid inputs", () => {
-        const [value, valid] = Validator.isValidPurchaseDate("2022-04-30");
-        expect(value).is.equal("2022-04-30");
-        expect(valid).to.be.true;
+      it("Monto del crédito con valor en estado Dañado", () => {
+        const [credit, valid] = Validator.isValidCredit("50", "100", "Dañado");
+        expect(credit).is.equal(5000);
+        expect(valid).to.be.false;
       });
-    });
-    describe("Test invalid inputs", () => {
-      it("Test invalid inputs", () => {
-        const [value, valid] = Validator.isValidPurchaseDate(tomorrow);
-        expect(value).is.equal(tomorrow);
+      it("Monto del crédito con valor en estado Perdido", () => {
+        const [credit, valid] = Validator.isValidCredit("50", "100", "Perdido");
+        expect(credit).is.equal(5000);
         expect(valid).to.be.false;
       });
     });

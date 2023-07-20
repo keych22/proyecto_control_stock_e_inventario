@@ -24,6 +24,11 @@ export class Validator {
       entry.telephone,
       entry.state
     );
+    [this.product.credit, this.valid.credit] = Validator.isValidCredit(
+      entry.credit,
+      entry.state,
+      entry.sellingPrice
+    );
   }
 
   public static isValidCity(city: string): [string, boolean] {
@@ -55,6 +60,39 @@ export class Validator {
       case "Dañado":
       case "Perdido":
         valid = _.isEmpty(amount);
+        break;
+      default:
+        valid = false;
+    }
+    return [value, valid];
+  }
+
+  public static isValidCredit(
+    credit: string,
+    sellingPrice: string,
+    state: string
+  ): [number | null, boolean] {
+    credit = credit.trim();
+    const value = Validator.convertAmountDecimals(credit);
+    let price = Validator.convertAmountDecimals(sellingPrice);
+    let valid = false;
+    switch (state) {
+      case "Credito":
+        if (_.isNull(price)) {
+          price = Infinity;
+        }
+        if ((!_.isNull(value) && value < price) || _.isEmpty(credit)) {
+          valid = true;
+        } else {
+          valid = false;
+        }
+        break;
+      case "Vendido":
+      case "Apartado":
+      case "SinVender":
+      case "Dañado":
+      case "Perdido":
+        valid = _.isNull(value);
         break;
       default:
         valid = false;
