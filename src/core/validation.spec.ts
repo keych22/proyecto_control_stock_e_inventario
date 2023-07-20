@@ -171,6 +171,67 @@ describe("Test class Validator", () => {
     });
   });
 
+  describe("Test isValidClient", () => {
+    describe("Test valid inputs", () => {
+      describe("Cliente con un nombre conocido", () => {
+        it("Estado Vendido", () => {
+          const [client, valid] = Validator.isValidClient("PEDRO", "Vendido");
+          expect(client).is.equal("PEDRO");
+          expect(valid).to.be.true;
+        });
+        it("Estado Crédito", () => {
+          const [client, valid] = Validator.isValidClient("MARIA", "Credito");
+          expect(client).is.equal("MARIA");
+          expect(valid).to.be.true;
+        });
+        it("Estado Apartado", () => {
+          const [client, valid] = Validator.isValidClient(
+            "CLAUDIA",
+            "Apartado"
+          );
+          expect(client).is.equal("CLAUDIA");
+          expect(valid).to.be.true;
+        });
+      });
+      describe("Cliente con Alias", () => {
+        it("Válido para estado: Vendido, Crédito o Apartado", () => {
+          const [client, valid] = Validator.isValidClient(
+            "PEDRO123",
+            "Vendido"
+          );
+          expect(client).is.equal("PEDRO123");
+          expect(valid).to.be.true;
+        });
+      });
+      describe("Cliente con nombre desconocido", () => {
+        it("Sólo válido para estado Vendido", () => {
+          const [client, valid] = Validator.isValidClient("", "Vendido");
+          expect(client).is.equal("");
+          expect(valid).to.be.true;
+        });
+      });
+    });
+    describe("Test invalid inputs", () => {
+      describe("Cliente con nombre", () => {
+        it("Estado SinVender", () => {
+          const [client, valid] = Validator.isValidClient("PEDRO", "SinVender");
+          expect(client).is.equal("PEDRO");
+          expect(valid).to.be.false;
+        });
+        it("Estado Dañado", () => {
+          const [client, valid] = Validator.isValidClient("VICTOR", "Dañado");
+          expect(client).is.equal("VICTOR");
+          expect(valid).to.be.false;
+        });
+        it("Estado Perdido", () => {
+          const [client, valid] = Validator.isValidClient("KARINA", "Perdido");
+          expect(client).is.equal("KARINA");
+          expect(valid).to.be.false;
+        });
+      });
+    });
+  });
+
   describe("Test isValidPurchasePrice", () => {
     it("Test valid inputs", () => {
       const [value, valid] = Validator.isValidPurchasePrice("100");

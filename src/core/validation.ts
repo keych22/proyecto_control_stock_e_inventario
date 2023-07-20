@@ -29,6 +29,10 @@ export class Validator {
       entry.state,
       entry.sellingPrice
     );
+    [this.product.client, this.valid.client] = Validator.isValidClient(
+      entry.client,
+      entry.state
+    );
   }
 
   public static isValidCity(city: string): [string, boolean] {
@@ -38,6 +42,31 @@ export class Validator {
   public static isValidCategory(category: string): [string, boolean] {
     const value = category;
     const valid = !_.isEmpty(category);
+    return [value, valid];
+  }
+
+  public static isValidClient(
+    client: string,
+    state: string
+  ): [string, boolean] {
+    const value = client;
+    let valid = false;
+    switch (state) {
+      case "Credito":
+      case "Apartado":
+        valid = !_.isEmpty(value);
+        break;
+      case "Vendido":
+        valid = true;
+        break;
+      case "SinVender":
+      case "Dañado":
+      case "Perdido":
+        valid = _.isEmpty(value);
+        break;
+      default:
+        valid = false;
+    }
     return [value, valid];
   }
 
@@ -116,51 +145,6 @@ export class Validator {
     const value = state;
     const valid = States.includes(state);
     return [value, valid];
-  }
-
-  public static isValidClient(
-    client: string,
-    state: string
-  ): [string, boolean] {
-    const value = client;
-    let valid = false;
-    switch (state) {
-      case "Credito":
-      case "Apartado":
-        valid = !_.isEmpty(value);
-        break;
-      case "Vendido":
-        valid = _.isEmpty(value) || !_.isEmpty(value); // O colocar simplemente valid = true; ??
-        break;
-      case "SinVender":
-      case "Dañado":
-      case "Perdido":
-        valid = _.isEmpty(value);
-        break;
-      default:
-        valid = false;
-    }
-    return [value, valid];
-  }
-
-  public static isValidSellingDate(
-    sellingDate: string | Date,
-    purchaseDate: string
-  ): [string | Date, boolean] {
-    const valueSellingDate = new Date(sellingDate);
-    const valuePurchaseDate = new Date(purchaseDate);
-    const valid =
-      valueSellingDate >= valuePurchaseDate &&
-      Validator.isValidDate(valueSellingDate);
-    return [sellingDate, valid];
-  }
-
-  public static isValidPurchaseDate(
-    date: string | Date
-  ): [string | Date, boolean] {
-    const value = new Date(date);
-    const valid = Validator.isValidDate(value);
-    return [date, valid];
   }
 
   public static isValidDate(date: Date) {
