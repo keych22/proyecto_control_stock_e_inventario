@@ -362,6 +362,38 @@ describe("Test class Validator", () => {
     });
   });
 
+  describe("Test isValidPurchaseDate", () => {
+    describe("Test valid inputs", () => {
+      it("Igual a la fecha de inicio de actividades kchmodas", () => {
+        const [value, valid] = Validator.isValidPurchaseDate("2019-04-22");
+        expect(value).is.equal("2019-04-22");
+        expect(valid).to.be.true;
+      });
+      it("Fecha posterior al inicio", () => {
+        const [value, valid] = Validator.isValidPurchaseDate("2022-04-30");
+        expect(value).is.equal("2022-04-30");
+        expect(valid).to.be.true;
+      });
+      it("Fecha actual (hoy) igual al día de la validación de este test", () => {
+        const [value, valid] = Validator.isValidPurchaseDate("2023-07-23");
+        expect(value).is.equal("2023-07-23");
+        expect(valid).to.be.true;
+      });
+    });
+    describe("Test invalid inputs", () => {
+      it("Fecha anterior al inicio de actividades de kchmodas", () => {
+        const [value, valid] = Validator.isValidPurchaseDate("2019-04-21");
+        expect(value).is.equal("2019-04-21");
+        expect(valid).to.be.false;
+      });
+      it("Fecha futura, un año después a la fecha de hoy", () => {
+        const [value, valid] = Validator.isValidPurchaseDate("2024-07-24");
+        expect(value).is.equal("2024-07-24");
+        expect(valid).to.be.false;
+      });
+    });
+  });
+
   describe("Test isValidDate", () => {
     function dateBefore(date: Date) {
       const dateBefore = new Date(date);

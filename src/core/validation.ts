@@ -33,6 +33,8 @@ export class Validator {
       entry.client,
       entry.state
     );
+    [this.product.purchaseDate, this.valid.purchaseDate] =
+      Validator.isValidPurchaseDate(entry.purchaseDate);
   }
 
   public static isValidCity(city: string): [string, boolean] {
@@ -147,6 +149,12 @@ export class Validator {
     return [value, valid];
   }
 
+  public static isValidPurchaseDate(date: string): [string, boolean] {
+    const value = new Date(date);
+    const valid = Validator.isValidDate(value);
+    return [date, valid];
+  }
+
   public static isValidDate(date: Date) {
     const value = date.getTime();
 
@@ -208,7 +216,7 @@ class Data {
 }
 
 class Product {
-  purchaseDate: Date | string = "";
+  purchaseDate: string = "";
   city: string = "";
   category: string = "";
   supplier: string = "";
