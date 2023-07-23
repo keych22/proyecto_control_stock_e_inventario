@@ -35,6 +35,12 @@ export class Validator {
     );
     [this.product.purchaseDate, this.valid.purchaseDate] =
       Validator.isValidPurchaseDate(entry.purchaseDate);
+    [this.product.sellingDate, this.valid.sellingDate] =
+      Validator.isValidSellingDate(
+        entry.sellingDate,
+        entry.purchaseDate,
+        entry.state
+      );
   }
 
   public static isValidCity(city: string): [string, boolean] {
@@ -149,6 +155,33 @@ export class Validator {
     return [value, valid];
   }
 
+  public static isValidSellingDate(
+    sellingDate: string,
+    purchaseDate: string,
+    state: string
+  ): [string, boolean] {
+    const valueSellingDate = new Date(sellingDate);
+    const valuePurchaseDate = new Date(purchaseDate);
+    let valid = false;
+    switch (state) {
+      case "Vendido":
+      case "Credito":
+      case "Apartado":
+        valid =
+          Validator.isValidDate(valueSellingDate) &&
+          valueSellingDate >= valuePurchaseDate;
+        break;
+      case "SinVender":
+      case "Dañado":
+      case "Perdido":
+        valid = _.isEmpty(sellingDate);
+        break;
+      default:
+        valid = false;
+    }
+    return [sellingDate, valid];
+  }
+
   public static isValidPurchaseDate(date: string): [string, boolean] {
     const value = new Date(date);
     const valid = Validator.isValidDate(value);
@@ -230,7 +263,7 @@ class Product {
   size: string = "";
   purchasePrice: number | null = null;
   state: string = "";
-  sellingDate: Date | string = "";
+  sellingDate: string = "";
   sellingPrice: number | null = null;
   credit: number | null = null;
   client: string = "";

@@ -362,6 +362,75 @@ describe("Test class Validator", () => {
     });
   });
 
+  describe("Test isValidSellingDate", () => {
+    describe("Para estado: Vendido, Crédito o Apartado", () => {
+      describe("Casos válidos", () => {
+        it("Fecha de venta y compra coinciden con inicio de kchmodas", () => {
+          const [value, valid] = Validator.isValidSellingDate(
+            "2019-04-22",
+            "2019-04-22",
+            "Vendido"
+          );
+          expect(value).is.equal("2019-04-22");
+          expect(valid).to.be.true;
+        });
+        it("Fecha de venta posterior a la de compra", () => {
+          const [value, valid] = Validator.isValidSellingDate(
+            "2019-04-23",
+            "2019-04-22",
+            "Vendido"
+          );
+          expect(value).is.equal("2019-04-23");
+          expect(valid).to.be.true;
+        });
+      });
+      describe("Casos inválidos", () => {
+        it("Fecha de venta anterior a la de compra", () => {
+          const [value, valid] = Validator.isValidSellingDate(
+            "2019-04-21",
+            "2019-04-22",
+            "Vendido"
+          );
+          expect(value).is.equal("2019-04-21");
+          expect(valid).to.be.false;
+        });
+        it("Fecha de venta vacía", () => {
+          const [value, valid] = Validator.isValidSellingDate(
+            "",
+            "2019-04-22",
+            "Vendido"
+          );
+          expect(value).is.equal("");
+          expect(valid).to.be.false;
+        });
+      });
+      describe("Para estado: SinVender, Dañado o Perdido", () => {
+        describe("Caso válido", () => {
+          it("Campo fecha de venta vacío", () => {
+            const [value, valid] = Validator.isValidSellingDate(
+              "",
+              "2019-04-22",
+              "SinVender"
+            );
+            expect(value).is.equal("");
+            expect(valid).to.be.true;
+          });
+        });
+        describe("Casos inválido", () => {
+          it("Campo fecha de venta NO vacío", () => {
+            const [value, valid] = Validator.isValidSellingDate(
+              "2020-05-12",
+              "2019-04-22",
+              "SinVender"
+            );
+            expect(value).is.equal("2020-05-12");
+            expect(valid).to.be.false;
+          });
+        });
+      });
+    });
+  });
+
   describe("Test isValidPurchaseDate", () => {
     describe("Test valid inputs", () => {
       it("Igual a la fecha de inicio de actividades kchmodas", () => {
