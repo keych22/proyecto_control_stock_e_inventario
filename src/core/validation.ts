@@ -278,7 +278,6 @@ class Valid {
   purchaseDate: boolean = true;
   city: boolean = true;
   category: boolean = true;
-  supplier: boolean = true;
   product: boolean = true;
   purchasePrice: boolean = true;
   state: boolean = true;
@@ -300,7 +299,6 @@ export class ValidationError {
 
   public validate(entry: Entry) {
     this.validateDate(DateType.purchase, entry.purchaseDate);
-    this.validateSupplierNameIsNotEmpty(entry);
     switch (entry.state) {
       case "Vendido": {
         this.validateSoldItem(entry);
@@ -333,10 +331,6 @@ export class ValidationError {
 
   public validateNumberTelephoneIsEmpty(telephone: string): void {
     this.valid.telephone = _.isEmpty(telephone);
-  }
-
-  public validateSupplierNameIsNotEmpty(entry: Entry): void {
-    this.valid.supplier = !_.isEmpty(entry.supplier);
   }
 
   public validateClientNameIsNotEmpty(name: string): void {
