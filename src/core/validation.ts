@@ -286,6 +286,16 @@ class Valid {
   credit: boolean = true;
   client: boolean = true;
   telephone: boolean = true;
+
+  public isValid() {
+    const validValues = Object.values(this);
+    for (const validValue of validValues) {
+      if (!validValue) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
 
 export enum DateType {
