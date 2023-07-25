@@ -3,39 +3,38 @@ import _ from "lodash";
 
 export class Validator {
   public product = new Product();
-  public valid = new Valid();
+  public validation = new Validation();
 
   constructor(entry: Entry) {
-    [this.product.city, this.valid.city] = Validator.isValidCity(entry.city);
-    [this.product.category, this.valid.category] = Validator.isValidCategory(
-      entry.category
+    [this.product.city, this.validation.city] = Validator.isValidCity(
+      entry.city
     );
-    [this.product.sellingPrice, this.valid.sellingPrice] =
+    [this.product.category, this.validation.category] =
+      Validator.isValidCategory(entry.category);
+    [this.product.sellingPrice, this.validation.sellingPrice] =
       Validator.isValidSellingPrice(entry.sellingPrice, entry.state);
-    [this.product.product, this.valid.product] = Validator.isValidProduct(
+    [this.product.product, this.validation.product] = Validator.isValidProduct(
       entry.product
     );
-    [this.product.purchasePrice, this.valid.purchasePrice] =
+    [this.product.purchasePrice, this.validation.purchasePrice] =
       Validator.isValidPurchasePrice(entry.purchasePrice);
-    [this.product.state, this.valid.state] = Validator.isValidState(
+    [this.product.state, this.validation.state] = Validator.isValidState(
       entry.state
     );
-    [this.product.telephone, this.valid.telephone] = Validator.isValidTelephone(
-      entry.telephone,
-      entry.state
-    );
-    [this.product.credit, this.valid.credit] = Validator.isValidCredit(
+    [this.product.telephone, this.validation.telephone] =
+      Validator.isValidTelephone(entry.telephone, entry.state);
+    [this.product.credit, this.validation.credit] = Validator.isValidCredit(
       entry.credit,
       entry.state,
       entry.sellingPrice
     );
-    [this.product.client, this.valid.client] = Validator.isValidClient(
+    [this.product.client, this.validation.client] = Validator.isValidClient(
       entry.client,
       entry.state
     );
-    [this.product.purchaseDate, this.valid.purchaseDate] =
+    [this.product.purchaseDate, this.validation.purchaseDate] =
       Validator.isValidPurchaseDate(entry.purchaseDate);
-    [this.product.sellingDate, this.valid.sellingDate] =
+    [this.product.sellingDate, this.validation.sellingDate] =
       Validator.isValidSellingDate(
         entry.sellingDate,
         entry.purchaseDate,
@@ -269,7 +268,7 @@ class Product {
   address: string = "";
 }
 
-class Valid {
+class Validation {
   purchaseDate: boolean = true;
   city: boolean = true;
   category: boolean = true;

@@ -55,7 +55,7 @@ function storeSetup() {
         progress(Math.ceil((lineNumber / totalEntries) * 100));
         ++lineNumber;
         const validation = new Validator(entry);
-        const isValid = validation.valid.isValid();
+        const isValid = validation.validation.isValid();
         if (!isValid) {
           logError(`Línea: ${lineNumber} tiene un valor inválido.`);
           validationErrors = true;
