@@ -1,3 +1,4 @@
+import { ConvertAndValidate, Product } from "@/core/validation";
 import {
   collection,
   doc,
@@ -7,7 +8,6 @@ import {
 } from "firebase/firestore";
 import CSVFile from "@/core/csvfile";
 import type { Entry } from "@/core/core";
-import { Validator } from "@/core/validation";
 import _ from "lodash";
 import { defineStore } from "pinia";
 import firebase from "@/core/services/firebase";
@@ -51,19 +51,21 @@ function storeSetup() {
       let lineNumber = 1;
       const totalEntries = entries.length;
       let validationErrors = false;
+      const validProducts: Product[] = [];
       for (const entry of entries) {
         progress(Math.ceil((lineNumber / totalEntries) * 100));
         ++lineNumber;
-        const validation = new Validator(entry);
-        const isValid = validation.validation.isValid();
-        if (!isValid) {
+        const [product, validation] = ConvertAndValidate(entry);
+        if (!validation.isValid()) {
           logError(`Línea: ${lineNumber} tiene un valor inválido.`);
           validationErrors = true;
+        } else {
+          validProducts.push(product);
         }
       }
       if (!validationErrors) {
         const batchMaxSize = 500;
-        const numberOfBatches = Math.ceil(entries.length / batchMaxSize);
+        const numberOfBatches = Math.ceil(validProducts.length / batchMaxSize);
         progress(0);
 
         for (let batchIndex = 0; batchIndex < numberOfBatches; batchIndex++) {
@@ -71,11 +73,11 @@ function storeSetup() {
           const batchSize =
             batchIndex + 1 < numberOfBatches
               ? batchMaxSize
-              : entries.length % 500;
+              : validProducts.length % 500;
           for (let docIndex = 0; docIndex < batchSize; docIndex++) {
-            const entryIndex = batchIndex * batchMaxSize + docIndex;
-            const docRef = doc(collection(firebase.db, "entry"));
-            batch.set(docRef, entries[entryIndex]);
+            const productIndex = batchIndex * batchMaxSize + docIndex;
+            const docRef = doc(collection(firebase.db, "product"));
+            batch.set(docRef, validProducts[productIndex]);
           }
           await batch.commit();
           progress(Math.ceil(((batchIndex + 1) / numberOfBatches) * 100));
