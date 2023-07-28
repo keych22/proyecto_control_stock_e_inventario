@@ -14,11 +14,11 @@ export class Product {
   code: string = "";
   color: string = "";
   size: string = "";
-  purchasePrice: number | null = null;
+  purchasePrice: number = NaN;
   state: string = "";
   sellingDate: string = "";
-  sellingPrice: number | null = null;
-  credit: number | null = null;
+  sellingPrice: number = NaN;
+  credit: number = NaN;
   client: string = "";
   telephone: string = "";
   delivery: string = "";
@@ -55,20 +55,30 @@ export function ConvertAndValidate(entry: Entry): [Product, Validation] {
   const product = new Product();
   const validation = new Validation();
 
+  product.supplier = entry.supplier;
+  product.type = entry.type;
+  product.detail = entry.detail;
+  product.brand = entry.brand;
+  product.gender = entry.gender;
+  product.code = entry.code;
   product.color = entry.color;
+  product.size = entry.size;
+  product.delivery = entry.delivery;
+  product.contact = entry.contact;
+  product.note = entry.address;
+  product.address = entry.address;
 
   /* eslint-disable */
   [product.city,          validation.city]          = isValidCity(entry.city);
   [product.category,      validation.category]      = isValidCategory(entry.category);
-  [product.sellingPrice,  validation.sellingPrice]  = isValidSellingPrice(entry.sellingPrice, entry.state);
   [product.product,       validation.product]       = isValidProduct(entry.product);
   [product.purchasePrice, validation.purchasePrice] = isValidPurchasePrice(entry.purchasePrice);
   [product.state,         validation.state]         = isValidState(entry.state);
   [product.telephone,     validation.telephone]     = isValidTelephone(entry.telephone, entry.state);
-  [product.credit,        validation.credit]        = isValidCredit(entry.credit, entry.state, entry.sellingPrice);
   [product.client,        validation.client]        = isValidClient(entry.client, entry.state);
   [product.purchaseDate,  validation.purchaseDate]  = isValidPurchaseDate(entry.purchaseDate);
   [product.sellingDate,   validation.sellingDate]   = isValidSellingDate(entry.sellingDate, entry.purchaseDate, entry.state);
+  [product.sellingPrice, product.credit, validation.city] = isValidSellingPriceAndCredit(entry.sellingPrice, entry.credit, entry.state);
   /* eslint-enable */
 
   return [product, validation];
@@ -109,63 +119,46 @@ export function isValidClient(
   return [value, valid];
 }
 
-export function isValidSellingPrice(
-  amount: string,
-  state: string
-): [number | null, boolean] {
-  amount = amount.trim();
-  const value = convertAmountDecimals(amount);
-  let valid = false;
-  switch (state) {
-    case "SinVender":
-      valid = _.isEmpty(amount) || !_.isNull(value);
-      break;
-    case "Vendido":
-    case "Credito":
-    case "Apartado":
-      valid = !_.isNull(value);
-      break;
-    case "Dañado":
-    case "Perdido":
-      valid = _.isEmpty(amount);
-      break;
-    default:
-      valid = false;
-  }
-  return [value, valid];
-}
-
-export function isValidCredit(
-  credit: string,
+export function isValidSellingPriceAndCredit(
   sellingPrice: string,
+  credit: string,
   state: string
-): [number | null, boolean] {
-  credit = credit.trim();
-  const value = convertAmountDecimals(credit);
-  let price = convertAmountDecimals(sellingPrice);
+): [number, number, boolean] {
+  const sellingPriceAmount = convertAmountDecimals(sellingPrice);
+  const creditAmount = convertAmountDecimals(credit);
   let valid = false;
+  const priceIsEmptyOrValidNumber =
+    _.isEmpty(sellingPrice) || !_.isNaN(sellingPriceAmount);
+  const creditIsEmpty = _.isEmpty(credit);
+  const priceIsValidNumber = !_.isNaN(sellingPriceAmount);
+  const priceNotIsEmptyAndIsValidNumber =
+    !_.isEmpty(sellingPrice) && !_.isNaN(sellingPriceAmount);
+  const creditIsValidNumberAndLessThanPrice =
+    !_.isNaN(creditAmount) && creditAmount < sellingPriceAmount;
+  const priceAndCreditEmpty = _.isEmpty(sellingPrice) && _.isEmpty(credit);
   switch (state) {
-    case "Credito":
-      if (_.isNull(price)) {
-        price = Infinity;
-      }
-      if ((!_.isNull(value) && value < price) || _.isEmpty(credit)) {
-        valid = true;
-      } else {
-        valid = false;
-      }
+    case "SinVender":
+      valid = priceIsEmptyOrValidNumber && creditIsEmpty;
       break;
     case "Vendido":
+      valid = priceIsValidNumber && creditIsEmpty;
+      break;
+    case "Credito":
+      valid =
+        priceNotIsEmptyAndIsValidNumber &&
+        (creditIsEmpty || creditIsValidNumberAndLessThanPrice);
+      break;
     case "Apartado":
-    case "SinVender":
+      valid = priceIsEmptyOrValidNumber && creditIsEmpty;
+      break;
     case "Dañado":
     case "Perdido":
-      valid = _.isNull(value);
+      valid = priceAndCreditEmpty;
       break;
     default:
       valid = false;
   }
-  return [value, valid];
+  return [sellingPriceAmount, creditAmount, valid];
 }
 
 export function isValidProduct(product: string): [string, boolean] {
@@ -174,9 +167,9 @@ export function isValidProduct(product: string): [string, boolean] {
   return [value, valid];
 }
 
-export function isValidPurchasePrice(price: string): [number | null, boolean] {
+export function isValidPurchasePrice(price: string): [number, boolean] {
   const value = convertAmountDecimals(price);
-  const valid = !_.isNull(value);
+  const valid = !_.isNaN(value);
   return [value, valid];
 }
 
@@ -251,19 +244,19 @@ export function isValidTelephone(
   return [value, valid];
 }
 
-export function convertAmountDecimals(value: string): number | null {
+export function convertAmountDecimals(value: string): number {
   const regex = /^(?<integer>\d*)(\.?)(?<decimal>\d{0,2})$/;
   const match = value.match(regex);
 
   if (!match) {
-    return null;
+    return NaN;
   }
 
   const integer = match.groups!.integer;
   const decimal = match.groups!.decimal;
 
   if (!integer.length && !decimal.length) {
-    return null;
+    return NaN;
   }
 
   const integerNumber = parseInt(integer.padEnd(1, "0"));

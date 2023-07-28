@@ -3,13 +3,12 @@ import {
   isValidCategory,
   isValidCity,
   isValidClient,
-  isValidCredit,
   isValidDate,
   isValidProduct,
   isValidPurchaseDate,
   isValidPurchasePrice,
   isValidSellingDate,
-  isValidSellingPrice,
+  isValidSellingPriceAndCredit,
   isValidState,
   isValidTelephone,
 } from "@/core/validation";
@@ -52,82 +51,43 @@ describe("Test isValidCategory", () => {
   });
 });
 
-describe("Test isValidSellingPrice", () => {
-  describe("Estado vendido", () => {
-    it("Caso válido: Debe tener un precio", () => {
-      const [sellingPrice, valid] = isValidSellingPrice("100", "Vendido");
-      expect(sellingPrice).to.equal(10000);
-      expect(valid).to.be.true;
-    });
-    it("Caso inválido: Si no tiene el precio", () => {
-      const [sellingPrice, valid] = isValidSellingPrice("", "Vendido");
-      expect(sellingPrice).is.null;
-      expect(valid).to.be.false;
-    });
-  });
-  describe("Estado crédito", () => {
-    it("Caso válido: Debe tener un precio", () => {
-      const [sellingPrice, valid] = isValidSellingPrice("100", "Credito");
-      expect(sellingPrice).to.equal(10000);
-      expect(valid).to.be.true;
-    });
-    it("Caso inválido: Si no tiene el precio", () => {
-      const [sellingPrice, valid] = isValidSellingPrice("", "Credito");
-      expect(sellingPrice).is.null;
-      expect(valid).to.be.false;
-    });
-  });
-  describe("Estado apartado", () => {
-    it("Caso válido: Debe tener un precio", () => {
-      const [sellingPrice, valid] = isValidSellingPrice("100", "Apartado");
-      expect(sellingPrice).to.equal(10000);
-      expect(valid).to.be.true;
-    });
-    it("Caso inválido: Si no tiene el precio", () => {
-      const [sellingPrice, valid] = isValidSellingPrice("", "Apartado");
-      expect(sellingPrice).is.null;
-      expect(valid).to.be.false;
-    });
-  });
-  describe("Estado SinVender", () => {
-    it("Caso válido: Sin precio", () => {
-      const [sellingPrice, valid] = isValidSellingPrice("", "SinVender");
-      expect(sellingPrice).is.null;
-      expect(valid).to.be.true;
-    });
-    it("Caso válido: Con precio", () => {
-      const [sellingPrice, valid] = isValidSellingPrice("100", "SinVender");
-      expect(sellingPrice).to.equal(10000);
-      expect(valid).to.be.true;
-    });
-    it("Caso inválido: Valor alfanumérico", () => {
-      const [sellingPrice, valid] = isValidSellingPrice("a1", "SinVender");
-      expect(sellingPrice).to.equal(null);
-      expect(valid).to.be.false;
-    });
-  });
-  describe("Estado Dañado", () => {
-    it("Caso válido: Sin precio", () => {
-      const [sellingPrice, valid] = isValidSellingPrice("", "Dañado");
-      expect(sellingPrice).is.null;
-      expect(valid).to.be.true;
-    });
-    it("Caso inválido: Si tiene un precio", () => {
-      const [sellingPrice, valid] = isValidSellingPrice("100", "Dañado");
-      expect(sellingPrice).to.equal(10000);
-      expect(valid).to.be.false;
-    });
-  });
-  describe("Estado Perdido", () => {
-    it("Caso válido: Sin precio", () => {
-      const [sellingPrice, valid] = isValidSellingPrice("", "Perdido");
-      expect(sellingPrice).is.null;
-      expect(valid).to.be.true;
-    });
-    it("Caso inválido: Si tiene un precio", () => {
-      const [sellingPrice, valid] = isValidSellingPrice("100", "Perdido");
-      expect(sellingPrice).to.equal(10000);
-      expect(valid).to.be.false;
+describe("Test isValidSellingPriceAndCreditAndCredit", () => {
+  /* eslint-disable */
+    const tests = [
+      { conditions: { price: "",     credit: "",    states: ["Vendido", "Credito"] },                                               result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
+      { conditions: { price: "",     credit: "",    states: ["Apartado", "SinVender", "Dañado", "Perdido"] },                       result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: true  }},
+      { conditions: { price: "",     credit: "50",  states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: 5000,  valid: false }},
+      { conditions: { price: "",     credit: "B",   states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
+      { conditions: { price: "A",    credit: "",    states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
+      { conditions: { price: "A",    credit: "B",   states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
+      { conditions: { price: "A",    credit: "50",  states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: 5000,  valid: false }},
+      { conditions: { price: "A100", credit: "",    states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
+      { conditions: { price: "A100", credit: "50",  states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: 5000,  valid: false }},
+      { conditions: { price: "100A", credit: "50B", states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
+      { conditions: { price: "100A", credit: "B",   states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
+      { conditions: { price: "100",  credit: "",    states: ["Vendido", "Credito", "Apartado", "SinVender"] },                      result: {sellingPriceAmount: 10000, creditAmount: NaN,   valid: true  }},
+      { conditions: { price: "100",  credit: "",    states: ["Dañado", "Perdido"] },                                                result: {sellingPriceAmount: 10000, creditAmount: NaN,   valid: false }},
+      { conditions: { price: "100",  credit: "50",  states: ["Credito"] },                                                          result: {sellingPriceAmount: 10000, creditAmount: 5000,  valid: true  }},
+      { conditions: { price: "100",  credit: "100", states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: 10000, creditAmount: 10000, valid: false }},
+      { conditions: { price: "100",  credit: "B",   states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: 10000, creditAmount: NaN,   valid: false }},
+      { conditions: { price: "100",  credit: "50B", states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: 10000, creditAmount: NaN,   valid: false }},
+    ];
+    /* eslint-enable */
+  tests.forEach((test) => {
+    test.conditions.states.forEach((state) => {
+      it(`Si el precio es "${test.conditions.price}", el crédito "${test.conditions.credit}" y el estado "${state}"`, () => {
+        const [sellingPriceAmount, creditAmount, valid] =
+          isValidSellingPriceAndCredit(
+            test.conditions.price,
+            test.conditions.credit,
+            state
+          );
+        expect(sellingPriceAmount).to.deep.equal(
+          test.result.sellingPriceAmount
+        );
+        expect(creditAmount).to.deep.equal(test.result.creditAmount);
+        expect(valid).to.deep.equal(test.result.valid);
+      });
     });
   });
 });
@@ -208,12 +168,12 @@ describe("Test isValidPurchasePrice", () => {
   });
   it("Test invalid inputs", () => {
     const [value, valid] = isValidPurchasePrice("");
-    expect(value).is.null;
+    expect(value).is.NaN;
     expect(valid).to.be.false;
   });
   it("Test invalid inputs", () => {
     const [value, valid] = isValidPurchasePrice("a100");
-    expect(value).is.null;
+    expect(value).is.NaN;
     expect(valid).to.be.false;
   });
 });
@@ -261,58 +221,6 @@ describe("Test isValidState", () => {
     it("", () => {
       const [value, valid] = isValidState("");
       expect(value).is.equal("");
-      expect(valid).to.be.false;
-    });
-  });
-});
-
-describe("Test isValidCredit", () => {
-  describe("Test valid inputs", () => {
-    it("Monto del crédito inferior al precio de venta", () => {
-      const [credit, valid] = isValidCredit("90", "100", "Credito");
-      expect(credit).is.equal(9000);
-      expect(valid).to.be.true;
-    });
-    it("Monto del crédito vacío", () => {
-      const [credit, valid] = isValidCredit("", "100", "Credito");
-      expect(credit).is.null;
-      expect(valid).to.be.true;
-    });
-    it("Monto del crédito y el precio de venta vacíos", () => {
-      const [credit, valid] = isValidCredit("", "", "Credito");
-      expect(credit).is.null;
-      expect(valid).to.be.true;
-    });
-  });
-  describe("Test invalid inputs", () => {
-    it("Monto del crédito igual al precio de venta", () => {
-      const [credit, valid] = isValidCredit("100", "100", "Credito");
-      expect(credit).is.equal(10000);
-      expect(valid).to.be.false;
-    });
-    it("Monto del crédito con valor en estado Vendido", () => {
-      const [credit, valid] = isValidCredit("50", "100", "Vendido");
-      expect(credit).is.equal(5000);
-      expect(valid).to.be.false;
-    });
-    it("Monto del crédito con valor en estado Apartado", () => {
-      const [credit, valid] = isValidCredit("50", "100", "Apartado");
-      expect(credit).is.equal(5000);
-      expect(valid).to.be.false;
-    });
-    it("Monto del crédito con valor en estado SinVender", () => {
-      const [credit, valid] = isValidCredit("50", "100", "SinVender");
-      expect(credit).is.equal(5000);
-      expect(valid).to.be.false;
-    });
-    it("Monto del crédito con valor en estado Dañado", () => {
-      const [credit, valid] = isValidCredit("50", "100", "Dañado");
-      expect(credit).is.equal(5000);
-      expect(valid).to.be.false;
-    });
-    it("Monto del crédito con valor en estado Perdido", () => {
-      const [credit, valid] = isValidCredit("50", "100", "Perdido");
-      expect(credit).is.equal(5000);
       expect(valid).to.be.false;
     });
   });
@@ -581,7 +489,7 @@ describe("Test isValidTelephone", () => {
   });
 });
 
-describe("Test convertAmount", () => {
+describe("Test convertAmountDecimals", () => {
   it("Test valid inputs", () => {
     expect(convertAmountDecimals("0")).to.be.eql(0);
 
@@ -617,7 +525,8 @@ describe("Test convertAmount", () => {
   });
 
   it("Test invalid inputs", () => {
-    expect(convertAmountDecimals("")).to.be.null;
-    expect(convertAmountDecimals(".")).to.be.null;
+    expect(convertAmountDecimals("")).is.NaN;
+    expect(convertAmountDecimals(".")).is.NaN;
+    expect(convertAmountDecimals("1.234")).is.NaN;
   });
 });
