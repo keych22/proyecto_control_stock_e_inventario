@@ -85,14 +85,14 @@ function storeSetup() {
     }
   }
 
-  async function save(key: string, product: Product) {
+  async function update(key: string, product: Product) {
     const docRef = doc(firebase.db, "product", key);
     await updateDoc(docRef, { ...product });
   }
 
   return {
     products,
-    save,
+    update,
     loadInventory,
   };
 }

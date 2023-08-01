@@ -75,7 +75,7 @@ function closeDialog() {
 
 function apply() {
   if (selectedProduct.value) {
-    dbStore.save(selectedProduct.value.key, selectedProduct.value.product);
+    dbStore.update(selectedProduct.value.key, selectedProduct.value.product);
   }
   closeDialog();
 }
