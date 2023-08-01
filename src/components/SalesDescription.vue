@@ -21,7 +21,7 @@
       />
     </v-row>
     <v-row>
-      <v-text-field v-model="value.difference" label="Diferencia" type="text" />
+      <v-text-field v-model="difference" label="Diferencia" type="text" />
     </v-row>
     <v-row>
       <v-text-field
@@ -35,29 +35,32 @@
 </template>
 
 <script setup lang="ts">
-import { type PropType, ref, unref } from "vue";
-import type { Entry } from "@/core/core";
+import { type PropType, computed, ref, unref } from "vue";
+import type { Product } from "@/core/validation";
 
 const props = defineProps({
-  product: { type: Object as PropType<Entry>, required: true },
+  product: { type: Object as PropType<Product>, required: true },
 });
 
 const newProduct = unref(props.product);
+const difference = computed(() => {
+  return newProduct.sellingPrice - newProduct.credit;
+});
 
 const emit = defineEmits<{
-  (e: "update", newProduct: Entry): void;
+  (e: "update", newProduct: Product): void;
 }>();
 
-function updatePurchasePrice(purchasePrice: string) {
+function updatePurchasePrice(purchasePrice: number) {
   newProduct.purchasePrice = purchasePrice;
   emit("update", newProduct);
 }
 
-function updateCredit(credit: string) {
+function updateCredit(credit: number) {
   newProduct.credit = credit;
   emit("update", newProduct);
 }
-function updateSalePrice(salePrice: string) {
+function updateSalePrice(salePrice: number) {
   newProduct.sellingPrice = salePrice;
   emit("update", newProduct);
 }

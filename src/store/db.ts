@@ -1,4 +1,4 @@
-import { ConvertAndValidate, Product } from "@/core/validation";
+import { ConvertAndValidate, type Product } from "@/core/validation";
 import {
   collection,
   doc,
@@ -7,29 +7,28 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import CSVFile from "@/core/csvfile";
-import type { Entry } from "@/core/core";
 import _ from "lodash";
 import { defineStore } from "pinia";
 import firebase from "@/core/services/firebase";
 import { ref } from "vue";
 
 function storeSetup() {
-  const entries = ref<{ key: string; entry: Entry }[]>([]);
+  const products = ref<{ key: string; product: Product }[]>([]);
 
-  const entryCollection = collection(firebase.db, "entry");
+  const productCollection = collection(firebase.db, "product");
   onSnapshot(
-    entryCollection,
+    productCollection,
     { includeMetadataChanges: true },
     (doc) => {
       doc.docChanges().forEach((change) => {
         const key = change.doc.id;
-        const document = { key: key, entry: change.doc.data() as Entry };
+        const document = { key: key, product: change.doc.data() as Product };
         if (change.type === "added") {
-          entries.value.splice(change.newIndex, 0, document);
+          products.value.splice(change.newIndex, 0, document);
         } else if (change.type === "modified") {
-          entries.value.splice(change.oldIndex, 1, document);
+          products.value.splice(change.oldIndex, 1, document);
         } else if (change.type === "removed") {
-          entries.value.splice(change.oldIndex, 1);
+          products.value.splice(change.oldIndex, 1);
         }
       });
     },
@@ -86,13 +85,13 @@ function storeSetup() {
     }
   }
 
-  async function save(key: string, entry: Entry) {
-    const docRef = doc(firebase.db, "entry", key);
-    await updateDoc(docRef, { ...entry });
+  async function save(key: string, product: Product) {
+    const docRef = doc(firebase.db, "product", key);
+    await updateDoc(docRef, { ...product });
   }
 
   return {
-    entries,
+    products,
     save,
     loadInventory,
   };

@@ -54,16 +54,16 @@
 </template>
 <script setup lang="ts">
 import { type PropType, ref, unref } from "vue";
-import type { Entry } from "@/core/core";
+import type { Product } from "@/core/validation";
 
 const props = defineProps({
-  product: { type: Object as PropType<Entry>, required: true },
+  product: { type: Object as PropType<Product>, required: true },
 });
 
 const newProduct = unref(props.product);
 
 const emit = defineEmits<{
-  (e: "update", newProduct: Entry): void;
+  (e: "update", newProduct: Product): void;
 }>();
 
 function updateClient(client: string) {

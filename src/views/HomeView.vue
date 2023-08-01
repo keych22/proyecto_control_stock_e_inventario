@@ -29,7 +29,7 @@
               <product-dialog
                 v-if="selectedProduct"
                 :id="selectedProduct.key"
-                :item="selectedProduct.entry"
+                :item="selectedProduct.product"
                 @apply="apply"
                 @cancel="cancel"
               ></product-dialog>
@@ -43,8 +43,8 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import type { Entry } from "@/core/core";
 import NavBar from "@/components/NavBar.vue";
+import type { Product } from "@/core/validation";
 import ProductDialog from "@/components/ProductDialog.vue";
 import UploadFile from "@/components/UploadFile.vue";
 import _ from "lodash";
@@ -52,19 +52,19 @@ import { useDBStore } from "@/store/db";
 
 const dbStore = useDBStore();
 const dialog = ref(false);
-const selectedProduct = ref<{ key: string; entry: Entry } | null>(null);
+const selectedProduct = ref<{ key: string; product: Product } | null>(null);
 
 const search = ref("");
 
 const tableData = computed(() =>
-  _.map(dbStore.entries, (x) => {
-    return { key: x.key, ...x.entry };
+  _.map(dbStore.products, (x) => {
+    return { key: x.key, ...x.product };
   })
 );
 const editItem = (product: any) => {
   selectedProduct.value = {
     key: product.key as string,
-    entry: _.omit(product, "key") as Entry,
+    product: _.omit(product, "key") as Product,
   };
   dialog.value = true;
 };
@@ -75,7 +75,7 @@ function closeDialog() {
 
 function apply() {
   if (selectedProduct.value) {
-    dbStore.save(selectedProduct.value.key, selectedProduct.value.entry);
+    dbStore.save(selectedProduct.value.key, selectedProduct.value.product);
   }
   closeDialog();
 }

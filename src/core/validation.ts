@@ -1,30 +1,30 @@
 import { Cities, type Entry, StartDate, States } from "@/core/core";
 import _ from "lodash";
 
-export class Product {
-  purchaseDate: string = "";
-  city: string = "";
-  category: string = "";
-  supplier: string = "";
-  product: string = "";
-  type: string = "";
-  detail: string = "";
-  brand: string = "";
-  gender: string = "";
-  code: string = "";
-  color: string = "";
-  size: string = "";
-  purchasePrice: number = NaN;
-  state: string = "";
-  sellingDate: string = "";
-  sellingPrice: number = NaN;
-  credit: number = NaN;
-  client: string = "";
-  telephone: string = "";
-  delivery: string = "";
-  contact: string = "";
-  note: string = "";
-  address: string = "";
+export interface Product {
+  purchaseDate: string;
+  city: string;
+  category: string;
+  supplier: string;
+  product: string;
+  type: string;
+  detail: string;
+  brand: string;
+  gender: string;
+  code: string;
+  color: string;
+  size: string;
+  purchasePrice: number;
+  state: string;
+  sellingDate: string;
+  sellingPrice: number;
+  credit: number;
+  client: string;
+  telephone: string;
+  delivery: string;
+  contact: string;
+  note: string;
+  address: string;
 }
 
 class Validation {
@@ -52,7 +52,31 @@ class Validation {
 }
 
 export function ConvertAndValidate(entry: Entry): [Product, Validation] {
-  const product = new Product();
+  const product: Product = {
+    purchaseDate: "",
+    city: "",
+    category: "",
+    supplier: "",
+    product: "",
+    type: "",
+    detail: "",
+    brand: "",
+    gender: "",
+    code: "",
+    color: "",
+    size: "",
+    purchasePrice: NaN,
+    state: "",
+    sellingDate: "",
+    sellingPrice: NaN,
+    credit: NaN,
+    client: "",
+    telephone: "",
+    delivery: "",
+    contact: "",
+    note: "",
+    address: "",
+  };
   const validation = new Validation();
 
   product.supplier = entry.supplier;
