@@ -25,11 +25,10 @@
           @update:model-value="updateAddress"
         />
         <v-text-field
-          v-model="value.purchaseDate"
+          v-model="value.sellingDate"
           type="date"
-          label="Fecha"
-          placeholder="Fecha de entrega"
-          @update:model-value="updatePurchaseDate"
+          label="Fecha de venta"
+          @update:model-value="updateSellingDate"
         />
       </v-col>
     </v-row>
@@ -82,8 +81,8 @@ function updateAddress(address: string) {
   emit("update", newProduct);
 }
 
-function updatePurchaseDate(purchaseDate: string) {
-  newProduct.purchaseDate = purchaseDate;
+function updateSellingDate(sellingDate: string) {
+  newProduct.sellingDate = sellingDate;
   emit("update", newProduct);
 }
 
