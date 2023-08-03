@@ -5,7 +5,7 @@
     </v-row>
     <v-row>
       <v-text-field
-        v-model="value.purchasePrice"
+        v-model="purchasePriceString"
         label="Precio de compra"
         type="text"
         @update:model-value="updatePurchasePrice"
@@ -13,7 +13,7 @@
     </v-row>
     <v-row>
       <v-text-field
-        v-model="value.credit"
+        v-model="creditString"
         label="Abono"
         type="text"
         placeholder="Monto"
@@ -25,7 +25,7 @@
     </v-row>
     <v-row>
       <v-text-field
-        v-model="value.sellingPrice"
+        v-model="sellingPriceString"
         label="Precio de venta"
         type="text"
         @update:model-value="updateSalePrice"
@@ -44,7 +44,7 @@ const props = defineProps({
 
 const newProduct = unref(props.product);
 const difference = computed(() => {
-  return newProduct.sellingPrice - newProduct.credit;
+  return ((newProduct.sellingPrice - newProduct.credit) / 100).toFixed(2);
 });
 
 const emit = defineEmits<{
@@ -65,5 +65,16 @@ function updateSalePrice(salePrice: number) {
   emit("update", newProduct);
 }
 
+function convertDecimalToString(number: number): string {
+  return (number / 100).toFixed(2);
+}
+
+const purchasePriceString = computed(() =>
+  convertDecimalToString(value.value.purchasePrice)
+);
+const sellingPriceString = computed(() =>
+  convertDecimalToString(value.value.sellingPrice)
+);
+const creditString = computed(() => convertDecimalToString(value.value.credit));
 const value = ref(props.product);
 </script>
