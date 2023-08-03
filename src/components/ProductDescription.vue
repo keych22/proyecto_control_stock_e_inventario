@@ -31,7 +31,7 @@
           'Apartado',
           'Crédito',
           'Dañado',
-          'Extraviado',
+          'Perdido',
           'Sin vender',
           'Vendido',
         ]"
