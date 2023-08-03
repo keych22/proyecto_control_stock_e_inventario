@@ -12,6 +12,7 @@
         <v-text-field
           v-model="value.telephone"
           label="Teléfono (opcional)"
+          :rules="[validateTelephone]"
           placeholder="Indique un número telefónico"
           @update:model-value="updateTelephone"
         />
@@ -53,8 +54,8 @@
   </div>
 </template>
 <script setup lang="ts">
+import { type Product, isValidTelephone } from "@/core/validation";
 import { type PropType, ref, unref } from "vue";
-import type { Product } from "@/core/validation";
 
 const props = defineProps({
   product: { type: Object as PropType<Product>, required: true },
@@ -89,6 +90,15 @@ function updatePurchaseDate(purchaseDate: string) {
 function updateContact(contact: string) {
   newProduct.contact = contact;
   emit("update", newProduct);
+}
+
+function validateTelephone(telephone: string): boolean | string {
+  const tuplaValueValidTelephone = isValidTelephone(
+    telephone,
+    newProduct.state
+  );
+  const valid = tuplaValueValidTelephone[1];
+  return valid ? true : "Formato de télefono incorrecto";
 }
 
 const value = ref(props.product);
