@@ -27,6 +27,7 @@
         <v-text-field
           v-model="value.sellingDate"
           type="date"
+          :rules="[validateSellingDate]"
           label="Fecha de venta"
           @update:model-value="updateSellingDate"
         />
@@ -53,7 +54,11 @@
   </div>
 </template>
 <script setup lang="ts">
-import { type Product, isValidTelephone } from "@/core/validation";
+import {
+  type Product,
+  isValidSellingDate,
+  isValidTelephone,
+} from "@/core/validation";
 import { type PropType, ref, unref } from "vue";
 
 const props = defineProps({
@@ -98,6 +103,16 @@ function validateTelephone(telephone: string): boolean | string {
   );
   const valid = tuplaValueValidTelephone[1];
   return valid ? true : "Formato de télefono incorrecto";
+}
+
+function validateSellingDate(sellingDate: string): boolean | string {
+  const tuplaValueValidSellingDate = isValidSellingDate(
+    sellingDate,
+    newProduct.purchaseDate,
+    newProduct.state
+  );
+  const valid = tuplaValueValidSellingDate[1];
+  return valid ? true : "Fecha ingresada en un rango no válido";
 }
 
 const value = ref(props.product);
