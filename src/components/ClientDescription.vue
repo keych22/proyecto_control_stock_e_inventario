@@ -39,7 +39,6 @@
           v-model="value.contact"
           label="Forma de contacto"
           :items="[
-            '',
             'Facebook',
             'Instagram',
             'Ninguna',
