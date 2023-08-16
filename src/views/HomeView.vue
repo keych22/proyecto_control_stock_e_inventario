@@ -20,24 +20,24 @@
         <v-icon size="small" class="me-2" @click="editItem(item.raw)">
           mdi-pencil
         </v-icon>
-        <v-dialog v-model="dialog" max-width="600px">
-          <v-card>
-            <v-card-title>
-              <span class="text-h5">Información de Venta</span>
-            </v-card-title>
-            <v-card-text>
-              <product-dialog
-                v-if="selectedProduct"
-                :id="selectedProduct.key"
-                :item="selectedProduct.product"
-                @apply="apply"
-                @cancel="cancel"
-              ></product-dialog>
-            </v-card-text>
-          </v-card>
-        </v-dialog>
       </template>
     </v-data-table>
+    <v-dialog v-model="dialog" max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="text-h5">Información de Venta</span>
+        </v-card-title>
+        <v-card-text>
+          <product-dialog
+            v-if="selectedProduct"
+            :id="selectedProduct.key"
+            :item="selectedProduct.product"
+            @apply="apply"
+            @cancel="cancel"
+          ></product-dialog>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </nav-bar>
 </template>
 
