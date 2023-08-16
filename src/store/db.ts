@@ -90,10 +90,19 @@ function storeSetup() {
     await updateDoc(docRef, { ...product });
   }
 
+  function getProduct(key: string) {
+    const product = _.filter(
+      products.value,
+      (product) => product.key === key
+    )[0].product;
+    return _.cloneDeep(product);
+  }
+
   return {
     products,
     update,
     loadInventory,
+    getProduct,
   };
 }
 

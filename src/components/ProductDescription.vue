@@ -53,10 +53,10 @@ const state = ref(props.product.state);
 const newProduct = unref(props.product);
 
 const emit = defineEmits<{
-  (e: "update", newProduct: Product): void;
+  (e: "update:product", newProduct: Product): void;
 }>();
 function update(state: string) {
   newProduct.state = state;
-  emit("update", newProduct);
+  emit("update:product", newProduct);
 }
 </script>
