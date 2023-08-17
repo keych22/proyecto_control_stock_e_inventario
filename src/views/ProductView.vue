@@ -30,14 +30,7 @@
           <v-select
             v-model="product.state"
             label="Condición del producto"
-            :items="[
-              'Apartado',
-              'Crédito',
-              'Dañado',
-              'Perdido',
-              'Sin vender',
-              'Vendido',
-            ]"
+            :items="States"
           />
         </v-col>
       </v-row>
@@ -129,6 +122,7 @@ import { computed, ref, watch } from "vue";
 import { isValidSellingDate, isValidTelephone } from "@/core/validation";
 import { useRoute, useRouter } from "vue-router";
 import NavBar from "@/components/NavBar.vue";
+import { States } from "@/core/core";
 import type { VForm } from "vuetify/lib/components/index.mjs";
 import { useDBStore } from "@/store/db";
 
