@@ -55,22 +55,22 @@ describe("Test isValidSellingPriceAndCreditAndCredit", () => {
   /* eslint-disable */
     const tests = [
       { conditions: { price: "",     credit: "",    states: ["Vendido", "Credito"] },                                               result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
-      { conditions: { price: "",     credit: "",    states: ["Apartado", "SinVender", "Dañado", "Perdido"] },                       result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: true  }},
-      { conditions: { price: "",     credit: "50",  states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: 5000,  valid: false }},
-      { conditions: { price: "",     credit: "B",   states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
-      { conditions: { price: "A",    credit: "",    states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
-      { conditions: { price: "A",    credit: "B",   states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
-      { conditions: { price: "A",    credit: "50",  states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: 5000,  valid: false }},
-      { conditions: { price: "A100", credit: "",    states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
-      { conditions: { price: "A100", credit: "50",  states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: 5000,  valid: false }},
-      { conditions: { price: "100A", credit: "50B", states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
-      { conditions: { price: "100A", credit: "B",   states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
-      { conditions: { price: "100",  credit: "",    states: ["Vendido", "Credito", "Apartado", "SinVender"] },                      result: {sellingPriceAmount: 10000, creditAmount: NaN,   valid: true  }},
+      { conditions: { price: "",     credit: "",    states: ["Apartado", "Sin vender", "Dañado", "Perdido"] },                       result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: true  }},
+      { conditions: { price: "",     credit: "50",  states: ["Vendido", "Credito", "Apartado", "Sin vender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: 5000,  valid: false }},
+      { conditions: { price: "",     credit: "B",   states: ["Vendido", "Credito", "Apartado", "Sin vender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
+      { conditions: { price: "A",    credit: "",    states: ["Vendido", "Credito", "Apartado", "Sin vender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
+      { conditions: { price: "A",    credit: "B",   states: ["Vendido", "Credito", "Apartado", "Sin vender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
+      { conditions: { price: "A",    credit: "50",  states: ["Vendido", "Credito", "Apartado", "Sin vender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: 5000,  valid: false }},
+      { conditions: { price: "A100", credit: "",    states: ["Vendido", "Credito", "Apartado", "Sin vender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
+      { conditions: { price: "A100", credit: "50",  states: ["Vendido", "Credito", "Apartado", "Sin vender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: 5000,  valid: false }},
+      { conditions: { price: "100A", credit: "50B", states: ["Vendido", "Credito", "Apartado", "Sin vender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
+      { conditions: { price: "100A", credit: "B",   states: ["Vendido", "Credito", "Apartado", "Sin vender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: NaN,   creditAmount: NaN,   valid: false }},
+      { conditions: { price: "100",  credit: "",    states: ["Vendido", "Credito", "Apartado", "Sin vender"] },                      result: {sellingPriceAmount: 10000, creditAmount: NaN,   valid: true  }},
       { conditions: { price: "100",  credit: "",    states: ["Dañado", "Perdido"] },                                                result: {sellingPriceAmount: 10000, creditAmount: NaN,   valid: false }},
       { conditions: { price: "100",  credit: "50",  states: ["Credito"] },                                                          result: {sellingPriceAmount: 10000, creditAmount: 5000,  valid: true  }},
-      { conditions: { price: "100",  credit: "100", states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: 10000, creditAmount: 10000, valid: false }},
-      { conditions: { price: "100",  credit: "B",   states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: 10000, creditAmount: NaN,   valid: false }},
-      { conditions: { price: "100",  credit: "50B", states: ["Vendido", "Credito", "Apartado", "SinVender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: 10000, creditAmount: NaN,   valid: false }},
+      { conditions: { price: "100",  credit: "100", states: ["Vendido", "Credito", "Apartado", "Sin vender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: 10000, creditAmount: 10000, valid: false }},
+      { conditions: { price: "100",  credit: "B",   states: ["Vendido", "Credito", "Apartado", "Sin vender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: 10000, creditAmount: NaN,   valid: false }},
+      { conditions: { price: "100",  credit: "50B", states: ["Vendido", "Credito", "Apartado", "Sin vender", "Dañado", "Perdido"] }, result: {sellingPriceAmount: 10000, creditAmount: NaN,   valid: false }},
     ];
     /* eslint-enable */
   tests.forEach((test) => {
@@ -141,8 +141,8 @@ describe("Test isValidClient", () => {
   });
   describe("Test invalid inputs", () => {
     describe("Cliente con nombre", () => {
-      it("Estado SinVender", () => {
-        const [client, valid] = isValidClient("PEDRO", "SinVender");
+      it("Estado Sin vender", () => {
+        const [client, valid] = isValidClient("PEDRO", "Sin vender");
         expect(client).is.equal("PEDRO");
         expect(valid).to.be.false;
       });
@@ -195,9 +195,9 @@ describe("Test isValidState", () => {
       expect(value).is.equal("Apartado");
       expect(valid).to.be.true;
     });
-    it("SinVender", () => {
-      const [value, valid] = isValidState("SinVender");
-      expect(value).is.equal("SinVender");
+    it("Sin vender", () => {
+      const [value, valid] = isValidState("Sin vender");
+      expect(value).is.equal("Sin vender");
       expect(valid).to.be.true;
     });
     it("Dañado", () => {
@@ -264,13 +264,13 @@ describe("Test isValidSellingDate", () => {
         expect(valid).to.be.false;
       });
     });
-    describe("Para estado: SinVender, Dañado o Perdido", () => {
+    describe("Para estado: Sin vender, Dañado o Perdido", () => {
       describe("Caso válido", () => {
         it("Campo fecha de venta vacío", () => {
           const [value, valid] = isValidSellingDate(
             "",
             "2019-04-22",
-            "SinVender"
+            "Sin vender"
           );
           expect(value).is.equal("");
           expect(valid).to.be.true;
@@ -281,7 +281,7 @@ describe("Test isValidSellingDate", () => {
           const [value, valid] = isValidSellingDate(
             "2020-05-12",
             "2019-04-22",
-            "SinVender"
+            "Sin vender"
           );
           expect(value).is.equal("2020-05-12");
           expect(valid).to.be.false;
@@ -450,14 +450,14 @@ describe("Test isValidTelephone", () => {
     });
   });
 
-  describe("Estado SinVender", () => {
+  describe("Estado Sin vender", () => {
     it("Caso válido: número debe estar vacío", () => {
-      const [value, valid] = isValidTelephone("", "SinVender");
+      const [value, valid] = isValidTelephone("", "Sin vender");
       expect(value).is.equal("");
       expect(valid).to.be.true;
     });
     it("Caso inválido: campo con dígitos", () => {
-      const [value, valid] = isValidTelephone("12", "SinVender");
+      const [value, valid] = isValidTelephone("12", "Sin vender");
       expect(value).is.equal("12");
       expect(valid).to.be.false;
     });

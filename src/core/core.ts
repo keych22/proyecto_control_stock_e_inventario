@@ -32,7 +32,7 @@ const States = [
   "Vendido",
   "Credito",
   "Apartado",
-  "SinVender",
+  "Sin vender",
   "Dañado",
   "Perdido",
 ];

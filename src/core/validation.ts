@@ -132,7 +132,7 @@ export function isValidClient(
     case "Vendido":
       valid = true;
       break;
-    case "SinVender":
+    case "Sin vender":
     case "Dañado":
     case "Perdido":
       valid = _.isEmpty(value);
@@ -161,7 +161,7 @@ export function isValidSellingPriceAndCredit(
     !_.isNaN(creditAmount) && creditAmount < sellingPriceAmount;
   const priceAndCreditEmpty = _.isEmpty(sellingPrice) && _.isEmpty(credit);
   switch (state) {
-    case "SinVender":
+    case "Sin vender":
       valid = priceIsEmptyOrValidNumber && creditIsEmpty;
       break;
     case "Vendido":
@@ -218,7 +218,7 @@ export function isValidSellingDate(
       valid =
         isValidDate(valueSellingDate) && valueSellingDate >= valuePurchaseDate;
       break;
-    case "SinVender":
+    case "Sin vender":
     case "Dañado":
     case "Perdido":
       valid = _.isEmpty(sellingDate);
@@ -257,7 +257,7 @@ export function isValidTelephone(
     case "Apartado":
       valid = regex.test(telephone) || _.isEmpty(telephone);
       break;
-    case "SinVender":
+    case "Sin vender":
     case "Dañado":
     case "Perdido":
       valid = _.isEmpty(telephone);
