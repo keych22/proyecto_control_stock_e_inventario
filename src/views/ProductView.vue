@@ -1,7 +1,7 @@
 <template>
   <nav-bar
     ><h1>Información de Venta</h1>
-    <v-form>
+    <v-form ref="form">
       <v-row>
         <v-col cols="6">
           <div class="font-italic font-weight-black">Descripción</div>
@@ -125,10 +125,11 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref, watch } from "vue";
 import { isValidSellingDate, isValidTelephone } from "@/core/validation";
 import { useRoute, useRouter } from "vue-router";
 import NavBar from "@/components/NavBar.vue";
-import { computed } from "vue";
+import type { VForm } from "vuetify/lib/components/index.mjs";
 import { useDBStore } from "@/store/db";
 
 const route = useRoute();
@@ -136,13 +137,23 @@ const router = useRouter();
 const key = route.params.id as string;
 const db = useDBStore();
 
-const product = db.getProduct(key);
+const form = ref<VForm | null>(null);
+const product = ref(db.getProduct(key));
+
+watch(
+  product,
+  async () => {
+    const validation = await form.value.validate();
+    console.log(validation);
+  },
+  { deep: true }
+);
 function goHome() {
   router.push({ name: "home" });
 }
 
 function apply() {
-  db.update(key, product);
+  db.update(key, product.value);
   goHome();
 }
 function cancel() {
@@ -154,19 +165,22 @@ function convertDecimalToString(number: number): string {
 }
 
 const purchasePriceString = computed(() =>
-  convertDecimalToString(product.purchasePrice)
+  convertDecimalToString(product.value.purchasePrice)
 );
 
 const sellingPriceString = computed(() =>
-  convertDecimalToString(product.sellingPrice)
+  convertDecimalToString(product.value.sellingPrice)
 );
 
 const difference = computed(() => {
-  return ((product.sellingPrice - product.credit) / 100).toFixed(2);
+  return ((product.value.sellingPrice - product.value.credit) / 100).toFixed(2);
 });
 
 function validateTelephone(telephone: string): boolean | string {
-  const tuplaValueValidTelephone = isValidTelephone(telephone, product.state);
+  const tuplaValueValidTelephone = isValidTelephone(
+    telephone,
+    product.value.state
+  );
   const valid = tuplaValueValidTelephone[1];
   return valid ? true : "Formato de télefono incorrecto";
 }
@@ -174,12 +188,14 @@ function validateTelephone(telephone: string): boolean | string {
 function validateSellingDate(sellingDate: string): boolean | string {
   const tuplaValueValidSellingDate = isValidSellingDate(
     sellingDate,
-    product.purchaseDate,
-    product.state
+    product.value.purchaseDate,
+    product.value.state
   );
   const valid = tuplaValueValidSellingDate[1];
   return valid ? true : "Fecha ingresada en un rango no válido";
 }
 
-const creditString = computed(() => convertDecimalToString(product.credit));
+const creditString = computed(() =>
+  convertDecimalToString(product.value.credit)
+);
 </script>
