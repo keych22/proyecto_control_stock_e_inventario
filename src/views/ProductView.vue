@@ -70,14 +70,7 @@
           <v-select
             v-model="product.contact"
             label="Forma de contacto"
-            :items="[
-              'Facebook',
-              'Instagram',
-              'Ninguna',
-              'Personal',
-              'Referencia',
-              'Whatsapp',
-            ]"
+            :items="ContactMethod"
           />
         </v-col>
       </v-row>
@@ -118,11 +111,11 @@
 </template>
 
 <script setup lang="ts">
+import { ContactMethod, States } from "@/core/core";
 import { computed, ref, watch } from "vue";
 import { isValidSellingDate, isValidTelephone } from "@/core/validation";
 import { useRoute, useRouter } from "vue-router";
 import NavBar from "@/components/NavBar.vue";
-import { States } from "@/core/core";
 import type { VForm } from "vuetify/lib/components/index.mjs";
 import { useDBStore } from "@/store/db";
 
