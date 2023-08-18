@@ -55,7 +55,8 @@
         <v-col col="6">
           <v-text-field
             v-model="product.address"
-            label="Lugar de entrega"
+            :rules="[validateDeliveryInput]"
+            label="Lugar de entrega (Opcional)"
             placeholder="Dirección"
           />
           <v-text-field
@@ -116,6 +117,7 @@ import { ContactMethod, States } from "@/core/core";
 import { computed, ref, watch } from "vue";
 import {
   isValidClient,
+  isValidDelivery,
   isValidSellingDate,
   isValidTelephone,
 } from "@/core/validation";
@@ -167,6 +169,26 @@ const sellingPriceString = computed(() =>
 const difference = computed(() => {
   return ((product.value.sellingPrice - product.value.credit) / 100).toFixed(2);
 });
+
+function validateDeliveryInput(delivery: string): boolean | string {
+  const state = product.value.state;
+  const deliveryAndValidation = isValidDelivery(delivery, state);
+  let valid = deliveryAndValidation[1];
+  if (valid) {
+    return true;
+  }
+  switch (state) {
+    case "Credito":
+    case "Vendido":
+      return "Ingresar un lugar de entrega";
+    case "Apartado":
+    case "Sin vender":
+    case "Dañado":
+    case "Perdido":
+      return "Este campo DEBE estar vacío.";
+  }
+  return false;
+}
 
 function validateClientInput(client: string): boolean | string {
   const state = product.value.state;
