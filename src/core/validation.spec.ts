@@ -4,6 +4,7 @@ import {
   isValidCity,
   isValidClient,
   isValidDate,
+  isValidDelivery,
   isValidProduct,
   isValidPurchaseDate,
   isValidPurchasePrice,
@@ -88,6 +89,49 @@ describe("Test isValidSellingPriceAndCreditAndCredit", () => {
         expect(creditAmount).to.deep.equal(test.result.creditAmount);
         expect(valid).to.deep.equal(test.result.valid);
       });
+    });
+  });
+});
+
+describe("Test isValidDelivery", () => {
+  describe("Test valid inputs", () => {
+    /* eslint-disable */
+      const tests = [
+        { conditions: { delivery: "un lugar", states: ["Vendido", "Credito"] },                          result: { delivery: "un lugar", valid: true }},
+        { conditions: { delivery:    ""     , states: ["Apartado", "Sin vender", "Dañado", "Perdido"] }, result: { delivery: "",         valid: true }}
+      ];
+      /* eslint-enable */
+    tests.forEach((test) => {
+      test.conditions.states.forEach((state) => {
+        it(`Si el estado es "${state}" y la entrega esta definida en "${test.conditions.delivery}"`, () => {
+          const [delivery, valid] = isValidDelivery(
+            test.conditions.delivery,
+            state
+          );
+          expect(delivery).is.equal(test.conditions.delivery);
+          expect(valid).is.equal(test.result.valid);
+        });
+      });
+    });
+  });
+  describe("Test invalid inputs", () => {
+    const test = {
+      conditions: {
+        delivery: "un lugar",
+        states: ["Apartado", "Sin vender", "Dañado", "Perdido"],
+      },
+      result: { delivery: "un lugar", valid: false },
+    };
+    test.conditions.states.forEach((state) => {
+      it(
+        `Si el estado es "${state}" y la entrega esta definida en "${test.conditions.delivery}"`
+      );
+      const [delivery, valid] = isValidDelivery(
+        test.conditions.delivery,
+        state
+      );
+      expect(delivery).is.equal(test.conditions.delivery);
+      expect(valid).is.equal(test.result.valid);
     });
   });
 });

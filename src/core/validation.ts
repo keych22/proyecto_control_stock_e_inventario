@@ -31,6 +31,7 @@ class Validation {
   purchaseDate: boolean = true;
   city: boolean = true;
   category: boolean = true;
+  delivery: boolean = true;
   product: boolean = true;
   purchasePrice: boolean = true;
   state: boolean = true;
@@ -87,21 +88,21 @@ export function ConvertAndValidate(entry: Entry): [Product, Validation] {
   product.code = entry.code;
   product.color = entry.color;
   product.size = entry.size;
-  product.delivery = entry.delivery;
   product.contact = entry.contact;
   product.note = entry.address;
   product.address = entry.address;
 
   /* eslint-disable */
-  [product.city,          validation.city]          = isValidCity(entry.city);
-  [product.category,      validation.category]      = isValidCategory(entry.category);
-  [product.product,       validation.product]       = isValidProduct(entry.product);
-  [product.purchasePrice, validation.purchasePrice] = isValidPurchasePrice(entry.purchasePrice);
-  [product.state,         validation.state]         = isValidState(entry.state);
-  [product.telephone,     validation.telephone]     = isValidTelephone(entry.telephone, entry.state);
-  [product.client,        validation.client]        = isValidClient(entry.client, entry.state);
-  [product.purchaseDate,  validation.purchaseDate]  = isValidPurchaseDate(entry.purchaseDate);
-  [product.sellingDate,   validation.sellingDate]   = isValidSellingDate(entry.sellingDate, entry.purchaseDate, entry.state);
+  [product.city,          validation.city]                = isValidCity(entry.city);
+  [product.category,      validation.category]            = isValidCategory(entry.category);
+  [product.delivery,      validation.delivery]            = isValidDelivery(entry.delivery, entry.state);
+  [product.product,       validation.product]             = isValidProduct(entry.product);
+  [product.purchasePrice, validation.purchasePrice]       = isValidPurchasePrice(entry.purchasePrice);
+  [product.state,         validation.state]               = isValidState(entry.state);
+  [product.telephone,     validation.telephone]           = isValidTelephone(entry.telephone, entry.state);
+  [product.client,        validation.client]              = isValidClient(entry.client, entry.state);
+  [product.purchaseDate,  validation.purchaseDate]        = isValidPurchaseDate(entry.purchaseDate);
+  [product.sellingDate,   validation.sellingDate]         = isValidSellingDate(entry.sellingDate, entry.purchaseDate, entry.state);
   [product.sellingPrice, product.credit, validation.city] = isValidSellingPriceAndCredit(entry.sellingPrice, entry.credit, entry.state);
   /* eslint-enable */
 
@@ -141,6 +142,28 @@ export function isValidClient(
       valid = false;
   }
   return [value, valid];
+}
+
+export function isValidDelivery(
+  delivery: string,
+  state: string
+): [string, boolean] {
+  let valid = true;
+  switch (state) {
+    case "Vendido":
+    case "Credito":
+      valid = true;
+      break;
+    case "Apartado":
+    case "Sin vender":
+    case "Dañado":
+    case "Perdido":
+      valid = _.isEmpty(delivery);
+      break;
+    default:
+      valid = false;
+  }
+  return [delivery, valid];
 }
 
 export function isValidSellingPriceAndCredit(
