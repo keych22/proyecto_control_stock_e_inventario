@@ -84,6 +84,7 @@
           v-model="purchasePriceString"
           label="Precio de compra"
           type="text"
+          readonly
         />
       </v-row>
       <v-row>
