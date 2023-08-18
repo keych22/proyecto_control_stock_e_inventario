@@ -105,7 +105,7 @@
       </v-row>
       <v-row>
         <v-text-field
-          v-model="sellingPriceString"
+          v-model.lazy="sellingPriceString"
           label="Precio de venta"
           type="text"
         />
@@ -122,6 +122,7 @@
 import { ContactMethod, States } from "@/core/core";
 import { computed, ref, watch } from "vue";
 import {
+  convertAmountDecimals,
   isValidClient,
   isValidDelivery,
   isValidSellingDate,
@@ -149,9 +150,15 @@ const purchasePriceString = computed(() =>
   convertDecimalToString(product.value.purchasePrice)
 );
 
-const sellingPriceString = computed(() =>
-  convertDecimalToString(product.value.sellingPrice)
-);
+const sellingPriceString = computed({
+  get() {
+    return convertDecimalToString(product.value.sellingPrice);
+  },
+  set(amount: string) {
+    const value = convertAmountDecimals(amount);
+    product.value.sellingPrice = value;
+  },
+});
 
 const difference = computed(() => {
   return convertDecimalToString(
