@@ -89,7 +89,7 @@
       </v-row>
       <v-row>
         <v-text-field
-          v-model="creditString"
+          v-model.lazy="creditString"
           label="Abono"
           type="text"
           placeholder="Monto"
@@ -112,7 +112,7 @@
       </v-row>
       <v-row>
         <v-btn @click="cancel">Cancelar</v-btn>
-        <v-btn @click="apply">Aplicar</v-btn>
+        <v-btn disabled="isValidForm" @click="apply">Aplicar</v-btn>
       </v-row>
     </v-form>
   </nav-bar>
@@ -166,15 +166,25 @@ const difference = computed(() => {
   );
 });
 
-const creditString = computed(() =>
-  convertDecimalToString(product.value.credit)
-);
+const creditString = computed({
+  get() {
+    return convertDecimalToString(product.value.credit);
+  },
+  set(credit: string) {
+    const value = convertAmountDecimals(credit);
+    product.value.credit = value;
+  },
+});
 
+const disabledApplyButton = ref(false);
 watch(
   product,
   async () => {
-    const validation = await form.value.validate();
-    console.log(validation);
+    const isValidForm = await form.value.validate();
+    console.log(isValidForm);
+    if (!isValidForm) {
+      disabledApplyButton.value = true;
+    }
   },
   { deep: true }
 );
