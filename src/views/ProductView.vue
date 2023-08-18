@@ -41,8 +41,9 @@
         <v-col col="6">
           <v-text-field
             v-model="product.client"
+            :rules="[validateClientInput]"
             label="Nombre"
-            placeholder="Nombre del cliente"
+            placeholder="Nombre del cliente (Nota: opcional si el estado es 'Vendido')"
           />
           <v-text-field
             v-model="product.telephone"
@@ -113,7 +114,11 @@
 <script setup lang="ts">
 import { ContactMethod, States } from "@/core/core";
 import { computed, ref, watch } from "vue";
-import { isValidSellingDate, isValidTelephone } from "@/core/validation";
+import {
+  isValidClient,
+  isValidSellingDate,
+  isValidTelephone,
+} from "@/core/validation";
 import { useRoute, useRouter } from "vue-router";
 import NavBar from "@/components/NavBar.vue";
 import type { VForm } from "vuetify/lib/components/index.mjs";
@@ -162,6 +167,27 @@ const sellingPriceString = computed(() =>
 const difference = computed(() => {
   return ((product.value.sellingPrice - product.value.credit) / 100).toFixed(2);
 });
+
+function validateClientInput(client: string): boolean | string {
+  const state = product.value.state;
+  const clientAndValidation = isValidClient(client, state);
+  const valid = clientAndValidation[1];
+  if (valid) {
+    return true;
+  }
+  switch (state) {
+    case "Credito":
+    case "Apartado":
+      return "El campo del nombre no puede estar vacío.";
+    case "Vendido":
+      return true;
+    case "Sin vender":
+    case "Dañado":
+    case "Perdido":
+      return "El campo del nombre debe estar vacío.";
+  }
+  return false;
+}
 
 function validateTelephone(telephone: string): boolean | string {
   const tuplaValueValidTelephone = isValidTelephone(
