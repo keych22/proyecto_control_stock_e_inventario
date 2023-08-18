@@ -96,7 +96,12 @@
         />
       </v-row>
       <v-row>
-        <v-text-field v-model="difference" label="Diferencia" type="text" />
+        <v-text-field
+          v-model="difference"
+          label="Diferencia"
+          type="text"
+          readonly
+        />
       </v-row>
       <v-row>
         <v-text-field
