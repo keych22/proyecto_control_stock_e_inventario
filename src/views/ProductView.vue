@@ -134,6 +134,27 @@ const db = useDBStore();
 const form = ref<VForm | null>(null);
 const product = ref(db.getProduct(key));
 
+const pesosToCents = 100;
+function convertDecimalToString(number: number): string {
+  return isNaN(number) ? "" : (number / pesosToCents).toFixed(2);
+}
+
+const purchasePriceString = computed(() =>
+  convertDecimalToString(product.value.purchasePrice)
+);
+
+const sellingPriceString = computed(() =>
+  convertDecimalToString(product.value.sellingPrice)
+);
+
+const difference = computed(() => {
+  return ((product.value.sellingPrice - product.value.credit) / 100).toFixed(2);
+});
+
+const creditString = computed(() =>
+  convertDecimalToString(product.value.credit)
+);
+
 watch(
   product,
   async () => {
@@ -153,22 +174,6 @@ function apply() {
 function cancel() {
   goHome();
 }
-
-function convertDecimalToString(number: number): string {
-  return (number / 100).toFixed(2);
-}
-
-const purchasePriceString = computed(() =>
-  convertDecimalToString(product.value.purchasePrice)
-);
-
-const sellingPriceString = computed(() =>
-  convertDecimalToString(product.value.sellingPrice)
-);
-
-const difference = computed(() => {
-  return ((product.value.sellingPrice - product.value.credit) / 100).toFixed(2);
-});
 
 function validateDeliveryInput(delivery: string): boolean | string {
   const state = product.value.state;
@@ -229,8 +234,4 @@ function validateSellingDate(sellingDate: string): boolean | string {
   const valid = tuplaValueValidSellingDate[1];
   return valid ? true : "Fecha ingresada en un rango no válido";
 }
-
-const creditString = computed(() =>
-  convertDecimalToString(product.value.credit)
-);
 </script>
