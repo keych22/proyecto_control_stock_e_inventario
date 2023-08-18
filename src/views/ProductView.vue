@@ -148,7 +148,9 @@ const sellingPriceString = computed(() =>
 );
 
 const difference = computed(() => {
-  return ((product.value.sellingPrice - product.value.credit) / 100).toFixed(2);
+  return convertDecimalToString(
+    product.value.sellingPrice - product.value.credit
+  );
 });
 
 const creditString = computed(() =>
