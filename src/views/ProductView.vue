@@ -48,7 +48,7 @@
           <v-text-field
             v-model="product.telephone"
             label="Teléfono (opcional)"
-            :rules="[validateTelephone]"
+            :rules="[validateTelephoneInput]"
             placeholder="Indique un número telefónico"
           />
         </v-col>
@@ -241,13 +241,24 @@ function validateClientInput(client: string): boolean | string {
   return false;
 }
 
-function validateTelephone(telephone: string): boolean | string {
-  const tuplaValueValidTelephone = isValidTelephone(
-    telephone,
-    product.value.state
-  );
-  const valid = tuplaValueValidTelephone[1];
-  return valid ? true : "Formato de télefono incorrecto";
+function validateTelephoneInput(telephone: string): boolean | string {
+  const state = product.value.state;
+  const telephoneAndValidation = isValidTelephone(telephone, state);
+  const valid = telephoneAndValidation[1];
+  if (valid) {
+    return true;
+  }
+  switch (state) {
+    case "Vendido":
+    case "Credito":
+    case "Apartado":
+      return true;
+    case "Sin vender":
+    case "Dañado":
+    case "Perdido":
+      return "El campo del télefono debe estar vacío, por el estado del producto.";
+  }
+  return false;
 }
 
 function validateSellingDate(sellingDate: string): boolean | string {
