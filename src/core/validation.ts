@@ -28,27 +28,29 @@ export interface Product {
 }
 
 class Validation {
-  purchaseDate: boolean = true;
-  city: boolean = true;
-  category: boolean = true;
-  delivery: boolean = true;
-  product: boolean = true;
-  purchasePrice: boolean = true;
-  state: boolean = true;
-  sellingDate: boolean = true;
-  sellingPrice: boolean = true;
-  credit: boolean = true;
-  client: boolean = true;
-  telephone: boolean = true;
+  purchaseDate: boolean | string = true;
+  city: boolean | string = true;
+  category: boolean | string = true;
+  delivery: boolean | string = true;
+  product: boolean | string = true;
+  purchasePrice: boolean | string = true;
+  state: boolean | string = true;
+  sellingDate: boolean | string = true;
+  sellingPrice: boolean | string = true;
+  credit: boolean | string = true;
+  client: boolean | string = true;
+  telephone: boolean | string = true;
 
-  public isValid() {
-    const validValues = Object.values(this);
-    for (const validValue of validValues) {
-      if (!validValue) {
-        return false;
+  public getErrors() {
+    const errors = [];
+    for (const validation of Object.values(this)) {
+      if (validation instanceof String) {
+        errors.push(validation);
+      } else if (!validation) {
+        errors.push("Hay un error de validación");
       }
     }
-    return true;
+    return errors;
   }
 }
 
@@ -103,158 +105,248 @@ export function ConvertAndValidate(entry: Entry): [Product, Validation] {
   [product.client,        validation.client]              = isValidClient(entry.client, entry.state);
   [product.purchaseDate,  validation.purchaseDate]        = isValidPurchaseDate(entry.purchaseDate);
   [product.sellingDate,   validation.sellingDate]         = isValidSellingDate(entry.sellingDate, entry.purchaseDate, entry.state);
-  [product.sellingPrice, product.credit, validation.city] = isValidSellingPriceAndCredit(entry.sellingPrice, entry.credit, entry.state);
+  [product.sellingPrice,  validation.city]                = isValidSellingPrice(entry.sellingPrice, entry.credit, entry.state);
+  [product.credit, validation.city]                       = isValidCredit(entry.credit, entry.sellingPrice, entry.state);
   /* eslint-enable */
 
   return [product, validation];
 }
 
-export function isValidCity(city: string): [string, boolean] {
-  return [city, Cities.includes(city)];
+export function isValidCity(city: string): [string, boolean | string] {
+  const validation = Cities.includes(city) ? true : `Ciudad inválida "${city}"`;
+  return [city, validation];
 }
 
-export function isValidCategory(category: string): [string, boolean] {
-  const value = category;
-  const valid = !_.isEmpty(category);
-  return [value, valid];
+export function isValidCategory(category: string): [string, boolean | string] {
+  const validation = !_.isEmpty(category)
+    ? true
+    : "Es necesario agregar una categoria";
+  return [category, validation];
 }
 
 export function isValidClient(
   client: string,
   state: string
-): [string, boolean] {
-  let valid = false;
+): [string, boolean | string] {
+  let validation: boolean | string = true;
   switch (state) {
+    case "Vendido":
+      break;
     case "Credito":
     case "Apartado":
-      valid = !_.isEmpty(client);
-      break;
-    case "Vendido":
-      valid = true;
+      if (_.isEmpty(client)) {
+        validation = `Si es ${state.toLowerCase()} la condición del producto, el nombre del cliente no puede estar vacío`;
+      }
       break;
     case "Sin vender":
     case "Dañado":
     case "Perdido":
-      valid = _.isEmpty(client);
+    case "Robado":
+      if (!_.isEmpty(client)) {
+        validation = `El nombre del cliente debe estar vacío si el producto esta ${state.toLowerCase()}`;
+      }
       break;
     default:
-      valid = false;
+      validation = `La condición del producto "${state}" no es reconocida en la validación del cliente`;
+      break;
   }
-  return [client, valid];
+  return [client, validation];
 }
 
 export function isValidDelivery(
   delivery: string,
   state: string
-): [string, boolean] {
-  let valid = true;
+): [string, boolean | string] {
+  let validation: boolean | string = true;
   switch (state) {
     case "Vendido":
     case "Credito":
-      valid = true;
       break;
     case "Apartado":
     case "Sin vender":
     case "Dañado":
     case "Perdido":
-      valid = _.isEmpty(delivery);
+    case "Robado":
+      if (!_.isEmpty(delivery)) {
+        validation = `La dirección debe estar vacía si el producto esta ${state.toLowerCase()}`;
+      }
       break;
     default:
-      valid = false;
+      validation = `La condición del producto "${state}" no es reconocida en la validación de la dirección`;
+      break;
   }
-  return [delivery, valid];
+  return [delivery, validation];
 }
 
-export function isValidSellingPriceAndCredit(
+export function isValidSellingPrice(
   sellingPrice: string,
   credit: string,
   state: string
-): [number, number, boolean] {
+): [number, boolean | string] {
   const sellingPriceAmount = convertAmountDecimals(sellingPrice);
   const creditAmount = convertAmountDecimals(credit);
-  let valid = false;
-  const priceIsEmptyOrValidNumber =
-    _.isEmpty(sellingPrice) || !_.isNaN(sellingPriceAmount);
-  const creditIsEmpty = _.isEmpty(credit);
-  const priceIsValidNumber = !_.isNaN(sellingPriceAmount);
-  const priceNotIsEmptyAndIsValidNumber =
-    !_.isEmpty(sellingPrice) && !_.isNaN(sellingPriceAmount);
-  const creditIsValidNumberAndLessThanPrice =
-    !_.isNaN(creditAmount) && creditAmount < sellingPriceAmount;
-  const priceAndCreditEmpty = _.isEmpty(sellingPrice) && _.isEmpty(credit);
+
+  const isSellingPriceInvalid = _.isNaN(sellingPriceAmount);
+
+  const isSellingPriceEmpty = _.isEmpty(sellingPrice);
+  const isSellingPriceNotEmpty = !isSellingPriceEmpty;
+
+  const isSellingPriceNotEmptyAndInvalid =
+    isSellingPriceNotEmpty && isSellingPriceInvalid;
+
+  const isSellingPriceEmptyOrInvalid =
+    isSellingPriceEmpty || isSellingPriceInvalid;
+
+  const isCreditGreaterThanOrEqualToSellingPrice =
+    creditAmount >= sellingPriceAmount;
+
+  let validation: boolean | string = true;
   switch (state) {
     case "Sin vender":
-      valid = priceIsEmptyOrValidNumber && creditIsEmpty;
+    case "Apartado":
+      if (isSellingPriceNotEmptyAndInvalid) {
+        validation = `El precio de venta "${sellingPrice}" tiene formato inválido`;
+      }
       break;
     case "Vendido":
-      valid = priceIsValidNumber && creditIsEmpty;
+      if (isSellingPriceEmptyOrInvalid) {
+        validation = `El precio de venta "${sellingPrice}" esta vacío o tiene formato inválido para el producto vendido`;
+      }
       break;
     case "Credito":
-      valid =
-        priceNotIsEmptyAndIsValidNumber &&
-        (creditIsEmpty || creditIsValidNumberAndLessThanPrice);
-      break;
-    case "Apartado":
-      valid = priceIsEmptyOrValidNumber && creditIsEmpty;
+      if (isSellingPriceEmptyOrInvalid) {
+        validation = `El precio de venta "${sellingPrice}" esta vacío o tiene formato inválido para el producto a crédito`;
+      } else if (isCreditGreaterThanOrEqualToSellingPrice) {
+        validation = `Si crédito es la condición de venta, el precio de venta $${sellingPrice} no puede ser menor o igual al abono`;
+      }
       break;
     case "Dañado":
     case "Perdido":
-      valid = priceAndCreditEmpty;
+      validation = true;
+      break;
+    case "Robado":
+      if (isSellingPriceNotEmpty) {
+        validation = `El precio de venta debe estar vacío si el producto esta ${state.toLowerCase()}`;
+      }
       break;
     default:
-      valid = false;
+      validation = `La condición del producto "${state}" no es reconocida en la validación del precio de venta`;
+      break;
   }
-  return [sellingPriceAmount, creditAmount, valid];
+  return [sellingPriceAmount, validation];
 }
 
-export function isValidProduct(product: string): [string, boolean] {
-  const value = product;
-  const valid = !_.isEmpty(product);
-  return [value, valid];
+export function isValidCredit(
+  credit: string,
+  sellingPrice: string,
+  state: string
+): [number, boolean | string] {
+  const creditAmount = convertAmountDecimals(credit);
+  const sellingPriceAmount = convertAmountDecimals(sellingPrice);
+
+  const isCreditInvalid = _.isNaN(creditAmount);
+
+  const isCreditEmpty = _.isEmpty(credit);
+  const isCreditNotEmpty = !isCreditEmpty;
+  const isCreditNotEmptyAndInvalid = isCreditNotEmpty && isCreditInvalid;
+
+  const isCreditGreaterThanOrEqualToSellingPrice =
+    creditAmount >= sellingPriceAmount;
+
+  let validation: boolean | string = true;
+  switch (state) {
+    case "Credito":
+      if (isCreditNotEmptyAndInvalid) {
+        validation = `El abono "${credit}" tiene un formato inválido`;
+      } else if (isCreditGreaterThanOrEqualToSellingPrice) {
+        validation = `Si crédito es la condición de venta, el abono $${credit} no puede ser mayor o igual al precio de venta`;
+      }
+      break;
+    case "Vendido":
+    case "Sin vender":
+    case "Apartado":
+    case "Dañado":
+    case "Perdido":
+    case "Robado":
+      if (isCreditNotEmpty) {
+        validation = `El abono debe estar vacío, si el producto esta ${state.toLowerCase()}`;
+      }
+      break;
+    default:
+      validation = `La condición del producto "${state}" no es reconocida en la validación del abono`;
+      break;
+  }
+  return [creditAmount, validation];
 }
 
-export function isValidPurchasePrice(price: string): [number, boolean] {
-  const value = convertAmountDecimals(price);
-  const valid = !_.isNaN(value);
-  return [value, valid];
+export function isValidProduct(product: string): [string, boolean | string] {
+  const validation = !_.isEmpty(product)
+    ? true
+    : `El producto "${product}" no puede estar vacío`;
+  return [product, validation];
 }
 
-export function isValidState(state: string): [string, boolean] {
-  const value = state;
-  const valid = States.includes(state);
-  return [value, valid];
+export function isValidPurchasePrice(
+  purchasePrice: string
+): [number, boolean | string] {
+  const value = convertAmountDecimals(purchasePrice);
+  const validation = !_.isNaN(value)
+    ? true
+    : `Formato del precio de compra ingresado no válido "${purchasePrice}" `;
+  return [value, validation];
+}
+
+export function isValidState(state: string): [string, boolean | string] {
+  const validation = States.includes(state)
+    ? true
+    : `El estado del producto "${state}" no es válido`;
+  return [state, validation];
 }
 
 export function isValidSellingDate(
   sellingDate: string,
   purchaseDate: string,
   state: string
-): [string, boolean] {
+): [string, boolean | string] {
   const valueSellingDate = new Date(sellingDate);
   const valuePurchaseDate = new Date(purchaseDate);
-  let valid = false;
+
+  const isSellingDateInvalid = !isValidDate(valueSellingDate);
+  const isSellingDateLessThanPurchaseDate =
+    valueSellingDate < valuePurchaseDate;
+
+  let validation: boolean | string = true;
   switch (state) {
     case "Vendido":
     case "Credito":
     case "Apartado":
-      valid =
-        isValidDate(valueSellingDate) && valueSellingDate >= valuePurchaseDate;
+      if (isSellingDateInvalid || isSellingDateLessThanPurchaseDate) {
+        validation = `Fecha de venta inválida, en un rango no permitido o menor que la de compra. Fecha de venta "${sellingDate}" y fecha de compra "${purchaseDate}". `;
+      }
       break;
     case "Sin vender":
     case "Dañado":
     case "Perdido":
-      valid = _.isEmpty(sellingDate);
+    case "Robado":
+      if (!_.isEmpty(sellingDate)) {
+        validation = `La fecha de venta debe estar vacía si el producto esta ${state.toLowerCase()}`;
+      }
       break;
     default:
-      valid = false;
+      validation = `La condición del producto "${state}" no es reconocida en la validación de la fecha de venta`;
+      break;
   }
-  return [sellingDate, valid];
+  return [sellingDate, validation];
 }
 
-export function isValidPurchaseDate(date: string): [string, boolean] {
-  const value = new Date(date);
-  const valid = isValidDate(value);
-  return [date, valid];
+export function isValidPurchaseDate(
+  purchaseDate: string
+): [string, boolean | string] {
+  const value = new Date(purchaseDate);
+  const validation = isValidDate(value)
+    ? true
+    : `Fecha de compra "${purchaseDate}" incorrecta o rango inválido`;
+  return [purchaseDate, validation];
 }
 
 export function isValidDate(date: Date) {
@@ -269,25 +361,34 @@ export function isValidDate(date: Date) {
 export function isValidTelephone(
   telephone: string,
   state: string
-): [string, boolean] {
+): [string, boolean | string] {
   const regex = /^[1-9]\d{9}$/;
-  const value = telephone;
-  let valid = false;
+
+  const isTelephoneNotEmptyAndNotMatchRegex =
+    !regex.test(telephone) && !_.isEmpty(telephone);
+
+  let validation: boolean | string = true;
   switch (state) {
     case "Vendido":
     case "Credito":
     case "Apartado":
-      valid = regex.test(telephone) || _.isEmpty(telephone);
+      if (isTelephoneNotEmptyAndNotMatchRegex) {
+        validation = `Formato ingresado "${telephone}" es incorrecto, deben ser 10 dígitos únicamente sin empezar por 0`;
+      }
       break;
     case "Sin vender":
     case "Dañado":
     case "Perdido":
-      valid = _.isEmpty(telephone);
+    case "Robado":
+      if (!_.isEmpty(telephone)) {
+        validation = `El teléfono debe estar vacío si el producto esta ${state.toLowerCase()}`;
+      }
       break;
     default:
-      valid = false;
+      validation = `La condición del producto "${state}" no es reconocida en la validación del teléfono`;
+      break;
   }
-  return [value, valid];
+  return [telephone, validation];
 }
 
 export function convertAmountDecimals(value: string): number {

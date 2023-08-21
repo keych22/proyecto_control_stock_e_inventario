@@ -55,11 +55,14 @@ function storeSetup() {
         progress(Math.ceil((lineNumber / totalEntries) * 100));
         ++lineNumber;
         const [product, validation] = ConvertAndValidate(entry);
-        if (!validation.isValid()) {
-          logError(`Línea: ${lineNumber} tiene un valor inválido.`);
-          validationErrors = true;
-        } else {
+        const errors = validation.getErrors();
+        if (_.isEmpty(errors)) {
           validProducts.push(product);
+        } else {
+          validationErrors = true;
+          for (const error of errors) {
+            logError(`Error en línea ${lineNumber} --> ${error}`);
+          }
         }
       }
       if (!validationErrors) {

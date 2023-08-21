@@ -35,6 +35,7 @@ const States = [
   "Sin vender",
   "Dañado",
   "Perdido",
+  "Robado",
 ];
 
 const ContactMethod = [
@@ -44,6 +45,7 @@ const ContactMethod = [
   "Personal",
   "Referencia",
   "Whatsapp",
+  "Feria",
 ];
 
 const StartDate = "2019-04-22";
