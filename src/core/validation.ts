@@ -123,12 +123,11 @@ export function isValidClient(
   client: string,
   state: string
 ): [string, boolean] {
-  const value = client;
   let valid = false;
   switch (state) {
     case "Credito":
     case "Apartado":
-      valid = !_.isEmpty(value);
+      valid = !_.isEmpty(client);
       break;
     case "Vendido":
       valid = true;
@@ -136,12 +135,12 @@ export function isValidClient(
     case "Sin vender":
     case "Dañado":
     case "Perdido":
-      valid = _.isEmpty(value);
+      valid = _.isEmpty(client);
       break;
     default:
       valid = false;
   }
-  return [value, valid];
+  return [client, valid];
 }
 
 export function isValidDelivery(
