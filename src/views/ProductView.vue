@@ -6,65 +6,76 @@
           Descripción del producto
         </v-row>
         <v-row class="mb-4">
-          <v-row>
-            <v-col cols="12" sm="6">
-              <v-list-item class="list-group-item border-0">
-                Producto: {{ product.product }}
-              </v-list-item>
-              <v-list-item class="list-group-item border-0">
-                Tipo: {{ product.type }}
-              </v-list-item>
-              <v-list-item class="list-group-item border-0"
-                >Marca: {{ product.brand }}
-              </v-list-item>
-              <v-list-item class="list-group-item border-0"
-                >Género: {{ product.gender }}
-              </v-list-item>
-              <v-list-item class="list-group-item border-0"
-                >Color: {{ product.color }}
-              </v-list-item>
-              <v-list-item class="list-group-item border-0"
-                >Talle: {{ product.size }}
-              </v-list-item>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-select
-                v-model="product.state"
-                class="pt-2 pr-3"
-                label="Condición"
-                :items="States"
-              />
-            </v-col>
-          </v-row>
+          <v-col cols="12" sm="6">
+            <v-list-item class="list-group-item border-0">
+              Producto: {{ product.product }}
+            </v-list-item>
+            <v-list-item class="list-group-item border-0">
+              Tipo: {{ product.type }}
+            </v-list-item>
+            <v-list-item class="list-group-item border-0"
+              >Marca: {{ product.brand }}
+            </v-list-item>
+            <v-list-item class="list-group-item border-0"
+              >Género: {{ product.gender }}
+            </v-list-item>
+            <v-list-item class="list-group-item border-0"
+              >Color: {{ product.color }}
+            </v-list-item>
+            <v-list-item class="list-group-item border-0"
+              >Talle: {{ product.size }}
+            </v-list-item>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-select
+              v-model="product.state"
+              class="pt-2 pr-3"
+              label="Condición"
+              variant="outlined"
+              :items="States"
+            />
+          </v-col>
         </v-row>
-        <v-row class="font-italic font-weight-black">Datos del cliente</v-row>
-        <v-row>
+        <v-row class="font-italic font-weight-black mb-0"
+          >Datos del cliente</v-row
+        >
+        <v-row class="mt-2">
           <v-col cols="12" sm="6">
             <v-text-field
               v-model="product.client"
               :rules="[validateClientInput]"
               label="Nombre del cliente"
               placeholder="Nota: opcional si el estado es 'Vendido'"
+              variant="outlined"
             />
+          </v-col>
+          <v-col cols="12" sm="6">
             <v-text-field
               v-model="product.telephone"
               label="Teléfono (opcional)"
               :rules="[validateTelephoneInput]"
               placeholder="Ejemplos: 1135726783  o  2995189044"
+              variant="outlined"
             />
           </v-col>
+        </v-row>
+        <v-row class="mt-2">
           <v-col cols="12" sm="6">
             <v-text-field
               v-model="product.address"
               :rules="[validateDeliveryInput]"
               label="Lugar de entrega (Opcional)"
+              variant="outlined"
               placeholder="Dirección"
             />
+          </v-col>
+          <v-col cols="12" sm="6">
             <v-text-field
               v-model="product.sellingDate"
               type="date"
               :rules="[validateSellingDateInput]"
               label="Fecha de venta"
+              variant="outlined"
             />
           </v-col>
         </v-row>
@@ -73,36 +84,20 @@
             <v-select
               v-model="product.contact"
               label="Forma de contacto"
+              variant="outlined"
               :items="ContactMethod"
             />
           </v-col>
         </v-row>
         <v-row>
-          <div class="font-italic font-weight-black">Datos de venta</div>
+          <div class="font-italic font-weight-black mb-2">Datos de venta</div>
         </v-row>
-        <v-row>
+        <v-row class="mt-2">
           <v-col cols="12" sm="6">
             <v-text-field
               v-model="purchasePriceString"
               label="Precio de compra"
-              readonly
-            />
-          </v-col>
-          <v-col cols="12" sm="6">
-            <v-text-field
-              :model-value="creditString"
-              :rules="[validateCreditInput]"
-              label="Abono"
-              placeholder="Monto"
-              @change="changeCredit"
-            />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" sm="6">
-            <v-text-field
-              v-model="difference"
-              label="Resta por pagar"
+              variant="outlined"
               readonly
             />
           </v-col>
@@ -111,7 +106,29 @@
               :model-value="sellingPriceString"
               :rules="[validateSellingPriceInput]"
               label="Precio de venta"
+              variant="outlined"
               @change="changeSellingPrice"
+            />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              :model-value="creditString"
+              :rules="[validateCreditInput]"
+              label="Abono"
+              placeholder="Monto"
+              variant="outlined"
+              @change="changeCredit"
+            />
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              v-model="difference"
+              label="Resta por pagar"
+              variant="outlined"
+              placeholder="Diferencia"
+              readonly
             />
           </v-col>
         </v-row>
@@ -120,7 +137,8 @@
             >Cancelar</v-btn
           >
           <v-btn
-            class="mr-3 bg-blue-lighten-1 text-blue-grey-darken-3"
+            color="success"
+            class="mr-3"
             :disabled="disabledApplyButton"
             @click="apply"
             >Aplicar</v-btn
@@ -178,6 +196,8 @@ const creditString = computed(
       ? "" // TUVE QUE COLOCAR VACIO..? o meter esta funcion dentro
       : convertDecimalToString(product.value.credit) // changeCredit
 );
+
+// class="mr-3 bg-blue-lighten-1 text-blue-grey-darken-3"
 
 const difference = computed(() => {
   const difference = product.value.sellingPrice - product.value.credit;
