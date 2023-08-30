@@ -1,23 +1,31 @@
 <template>
-  <nav-bar>
-    <upload-file />
-    <v-text-field
-      v-model="search"
-      append-icon="mdi-magnify"
-      label="Buscar Productos"
-      single-line
-      hide-details
-    />
+  <nav-bar class="mt-2">
+    <v-row class="ml-0 mb-0 mr-0">
+      <v-col cols="12" sm="6">
+        <upload-file />
+      </v-col>
+      <v-col cols="12" sm="6">
+        <v-text-field
+          v-model="search"
+          prepend-inner-icon="mdi-magnify"
+          label="Buscar Productos"
+          variant="outlined"
+          single-line
+          hide-details
+        />
+      </v-col>
+    </v-row>
+
     <v-data-table
       :headers="headers"
       :items="tableData"
-      :items-per-page="4"
-      class="elevation-1"
+      :items-per-page="5"
+      class="elevation-2"
       item-value="product"
       :search="search"
     >
       <template #[`item.actions`]="{ item }">
-        <v-icon size="small" class="me-2" @click="editItem(item.raw.key)">
+        <v-icon size="small" class="ml-3" @click="editItem(item.raw.key)">
           mdi-pencil
         </v-icon>
       </template>
