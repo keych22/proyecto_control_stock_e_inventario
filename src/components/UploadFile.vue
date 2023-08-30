@@ -1,7 +1,9 @@
 <template>
   <v-dialog v-model="dialog" persistent>
     <template #activator="{ props }">
-      <v-btn v-bind="props">Cargar inventario</v-btn>
+      <v-btn class="bg-blue-grey-lighten-4" v-bind="props"
+        >Cargar inventario</v-btn
+      >
     </template>
     <v-card>
       <v-card-title>Cargar inventario</v-card-title>
