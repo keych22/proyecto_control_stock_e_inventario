@@ -112,7 +112,7 @@
       </v-row>
       <v-row>
         <v-btn @click="cancel">Cancelar</v-btn>
-        <v-btn disabled="isValidForm" @click="apply">Aplicar</v-btn>
+        <v-btn :disabled="disabledApplyButton" @click="apply">Aplicar</v-btn>
       </v-row>
     </v-form>
   </nav-bar>
@@ -181,13 +181,13 @@ watch(
   product,
   async () => {
     const isValidForm = await form.value.validate();
-    console.log(isValidForm);
-    if (!isValidForm) {
+    if (!isValidForm.valid) {
       disabledApplyButton.value = true;
     }
   },
   { deep: true }
 );
+
 function goHome() {
   router.push({ name: "home" });
 }
