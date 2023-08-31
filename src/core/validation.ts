@@ -93,20 +93,19 @@ export function ConvertAndValidate(entry: Entry): [Product, Validation] {
   product.contact = entry.contact;
   product.note = entry.address;
   product.address = entry.address;
-
   /* eslint-disable */
-  [product.city,          validation.city]                = isValidCity(entry.city);
-  [product.category,      validation.category]            = isValidCategory(entry.category);
-  [product.delivery,      validation.delivery]            = isValidDelivery(entry.delivery, entry.state);
-  [product.product,       validation.product]             = isValidProduct(entry.product);
-  [product.purchasePrice, validation.purchasePrice]       = isValidPurchasePrice(entry.purchasePrice);
-  [product.state,         validation.state]               = isValidState(entry.state);
-  [product.telephone,     validation.telephone]           = isValidTelephone(entry.telephone, entry.state);
-  [product.client,        validation.client]              = isValidClient(entry.client, entry.state);
-  [product.purchaseDate,  validation.purchaseDate]        = isValidPurchaseDate(entry.purchaseDate);
-  [product.sellingDate,   validation.sellingDate]         = isValidSellingDate(entry.sellingDate, entry.purchaseDate, entry.state);
-  [product.sellingPrice,  validation.city]                = isValidSellingPrice(entry.sellingPrice, entry.credit, entry.state);
-  [product.credit, validation.city]                       = isValidCredit(entry.credit, entry.sellingPrice, entry.state);
+  [product.city,          validation.city]          = isValidCity(entry.city);
+  [product.category,      validation.category]      = isValidCategory(entry.category);
+  [product.delivery,      validation.delivery]      = isValidDelivery(entry.delivery, entry.state);
+  [product.product,       validation.product]       = isValidProduct(entry.product);
+  [product.purchasePrice, validation.purchasePrice] = isValidPurchasePrice(entry.purchasePrice);
+  [product.state,         validation.state]         = isValidState(entry.state);
+  [product.telephone,     validation.telephone]     = isValidTelephone(entry.telephone, entry.state);
+  [product.client,        validation.client]        = isValidClient(entry.client, entry.state);
+  [product.purchaseDate,  validation.purchaseDate]  = isValidPurchaseDate(entry.purchaseDate);
+  [product.sellingDate,   validation.sellingDate]   = isValidSellingDate(entry.sellingDate, entry.purchaseDate, entry.state);
+  [product.sellingPrice,  validation.city]          = isValidSellingPrice(entry.sellingPrice, entry.credit, entry.state);
+  [product.credit, validation.city]                 = isValidCredit(entry.credit, entry.sellingPrice, entry.state);
   /* eslint-enable */
 
   return [product, validation];
