@@ -61,7 +61,7 @@ describe("Test isValidSellingPrice", () => {
   // const mensajeComun1 = "el precio no puede estar vacío";
   // const mensajeComun2 = "el precio puede estar vacío";
   /* eslint-disable */
-    const testCases = [
+  const testCases = [
       { sellingPrice: "",     credit: "50",  states: ["Vendido", "Credito"],                                                          result: {sellingPriceAmount: NaN  , validation: false, message: "es la condición del producto, el precio no puede estar vacío" }},
       { sellingPrice: "",     credit: "50",  states: ["Apartado", "Sin vender", "Dañado"],                                            result: {sellingPriceAmount: NaN  , validation: false, message: "es la condición del producto, el precio puede estar vacío" }},
       { sellingPrice: "",     credit: "50",  states: ["Robado", "Perdido"],                                                           result: {sellingPriceAmount: NaN  , validation: true , message: "es la condición del producto, el precio debe estar vacío" }},
@@ -72,11 +72,11 @@ describe("Test isValidSellingPrice", () => {
       { sellingPrice: "100",  credit: "100", states: ["Credito"],                                                                     result: {sellingPriceAmount: 10000, validation: false, message: "es la condición del producto, el abono no puede ser igual al precio" }},
       { sellingPrice: "100",  credit: "150", states: ["Credito"],                                                                     result: {sellingPriceAmount: 10000, validation: false, message: "es la condición del producto, el abono no puede ser mayor al precio" }}
     ];
-    //tiene sentido que en los estados donde debe estar vacío no verifique A ni A100
-    // y solo verifique con un numero? o debo hacerlo por seguridad y contemplar todos los
-    //casos independientemente de la condicion?
-    // Para un producto a credito el precio es mayor que el abono ESTE MENSAJE
-    /* eslint-enable */
+  //tiene sentido que en los estados donde debe estar vacío no verifique A ni A100
+  // y solo verifique con un numero? o debo hacerlo por seguridad y contemplar todos los
+  //casos independientemente de la condicion?
+  // Para un producto a credito el precio es mayor que el abono ESTE MENSAJE
+  /* eslint-enable */
   testCases.forEach((test) => {
     test.states.forEach((state) => {
       it(`Si ${state} ${test.result.message} `, () => {
@@ -98,10 +98,9 @@ describe("Test isValidSellingPrice", () => {
     });
   });
 });
-
 describe("Test isValidCredit", () => {
   /* eslint-disable */
-    const testCases = [
+  const testCases = [
       { credit: "50",   sellingPrice: "100", states: ["Credito"],                                                          result: {creditAmount: 5000,  validation: true , message: "El abono tiene un monto correcto"}},
       { credit: "50",   sellingPrice: "100", states: ["Vendido", "Apartado", "Sin vender", "Dañado", "Perdido", "Robado"], result: {creditAmount: 5000,  validation: false, message: "El abono debe estar vacío"}},
       { credit: "150",  sellingPrice: "100", states: ["Credito"],                                                          result: {creditAmount: 15000, validation: false, message: "El abono no puede ser mayor que el precio de venta" }},
@@ -110,8 +109,8 @@ describe("Test isValidCredit", () => {
       { credit: "A",    sellingPrice: "100", states: ["Credito"],                                                          result: {creditAmount: NaN,   validation: false, message: "El abono no puede tener letras"}},
       { credit: "A100", sellingPrice: "100", states: ["Credito"],                                                          result: {creditAmount: NaN,   validation: false, message: "El abono no puede ser alfanumérico"}}
     ];
-    //MENSAJE: El producto a credito tiene un monto correcto
-    /* eslint-enable */
+  //MENSAJE: El producto a credito tiene un monto correcto
+  /* eslint-enable */
   testCases.forEach((test) => {
     test.states.forEach((state) => {
       it(`${test.result.message}`, () => {
@@ -161,11 +160,11 @@ describe("Test isValidDelivery", () => {
 
 describe("Test isValidState", () => {
   /* eslint-disable */
-    const testCases = [
+  const testCases = [
       { states: ["Vendido", "Credito", "Apartado", "Dañado", "Perdido", "Sin vender", "Robado"] , validation: true,  message: "es una condición permitida para el producto"   },
       { states: ["DUMMY", ""] ,                                                                   validation: false, message: "es una condición no permitida para el producto" } 
     ];
-    /* eslint-enable */
+  /* eslint-enable */
   testCases.forEach((test) => {
     test.states.forEach((state) => {
       it(`"${state}" ${test.message}`, () => {
@@ -183,15 +182,44 @@ describe("Test isValidState", () => {
 });
 
 describe("Test isValidClient", () => {
-  /* eslint-disable */
-  const testCases = [ 
-    {nombre: "Pedro", states : ["Vendido", "Credito", "Apartado"]           , validation : true , message: "puede tener un cliente"           },
-    {nombre: "Pedro", states : ["Credito", "Apartado"]                      , validation : true , message: "debe tener un cliente"            },
-    {nombre:   ""   , states : ["Credito", "Apartado"]                      , validation : false, message: "no puede estar sin cliente"       },
-    {nombre:   ""   , states : ["Vendido"]                                  , validation : true , message: "puedo no tener un cliente"        },
-    {nombre:   ""   , states : ["Sin vender", "Dañado", "Perdido", "Robado"], validation : true , message: "el nombre del cliente esta vacío" },
-    {nombre: "Pedro", states : ["Sin vender", "Dañado", "Perdido", "Robado"], validation : false, message: "no puede tener un cliente"        }
-];
+  const testCases = [
+    {
+      nombre: "Pedro",
+      states: ["Vendido", "Credito", "Apartado"],
+      validation: true,
+      message: "puede tener un cliente",
+    },
+    {
+      nombre: "Pedro",
+      states: ["Credito", "Apartado"],
+      validation: true,
+      message: "debe tener un cliente",
+    },
+    {
+      nombre: "",
+      states: ["Credito", "Apartado"],
+      validation: false,
+      message: "no puede estar sin cliente",
+    },
+    {
+      nombre: "",
+      states: ["Vendido"],
+      validation: true,
+      message: "puedo no tener un cliente",
+    },
+    {
+      nombre: "",
+      states: ["Sin vender", "Dañado", "Perdido", "Robado"],
+      validation: true,
+      message: "el nombre del cliente esta vacío",
+    },
+    {
+      nombre: "Pedro",
+      states: ["Sin vender", "Dañado", "Perdido", "Robado"],
+      validation: false,
+      message: "no puede tener un cliente",
+    },
+  ];
   /* eslint-enable */
   testCases.forEach((test) => {
     test.states.forEach((state) => {
@@ -230,7 +258,7 @@ describe("Test isValidProduct", () => {
 describe("Test isValidPurchasePrice", () => {
   describe("Precios de compra permitidos", () => {
     /* eslint-disable */
-  const testCases = [
+    const testCases = [
     { purchasePrice: "100",  result: { amount: 10000, validation: true  }},
     { purchasePrice: "20.5", result: { amount: 2050,  validation: true  }},
 ];
@@ -270,11 +298,11 @@ describe("Test isValidSellingDate", () => {
 
   describe("Fechas de venta válidas", () => {
     /* eslint-disable */
-  const testCases = [
+    const testCases = [
     { sellingDate: validDate,      purchaseDate: validDate, states: ['Vendido' , 'Credito', 'Apartado'], result:{ sellingDate: validDate,      validation: true, message: "La fecha de venta puede ser igual a la de compra"  }},
     { sellingDate: dateAfterValid, purchaseDate: validDate, states: ['Vendido' , 'Credito', 'Apartado'], result:{ sellingDate: dateAfterValid, validation: true, message: "La fecha de venta es mayor a la de compra"}}
   ];
-      /* eslint-enable */
+    /* eslint-enable */
     testCases.forEach((test) => {
       test.states.forEach((state) => {
         it(`${test.result.message}`, () => {
@@ -296,11 +324,11 @@ describe("Test isValidSellingDate", () => {
   });
   describe("Fechas de venta válidas, comparadas con el inicio de Kchmodas", () => {
     /* eslint-disable */
-  const testCases = [
+    const testCases = [
     { sellingDate: StartDate,      purchaseDate: StartDate, states: ['Vendido' , 'Credito', 'Apartado'], result:{ sellingDate: StartDate,      validation: true, message: "La fecha de venta puede ser igual al inicio de kchmodas" }},
     { sellingDate: dateAfterStart, purchaseDate: StartDate, states: ['Vendido' , 'Credito', 'Apartado'], result:{ sellingDate: dateAfterStart, validation: true, message: "La fecha de venta puede ser posterior al inicio de kchmodas"}}
   ];
-  /* eslint-enable */
+    /* eslint-enable */
     testCases.forEach((test) => {
       test.states.forEach((state) => {
         it(`"${test.result.message}"`, () => {
@@ -321,11 +349,12 @@ describe("Test isValidSellingDate", () => {
     });
   });
   describe("Fechas de venta vacías", () => {
+    /* prettier-ignore */
     /* eslint-disable */
-  const testCases = [
+    const testCases = [
     { sellingDate: "", purchaseDate: validDate, states: ["Sin vender", "Dañado", "Perdido", "Robado"], result:{ sellingDate: "", validation: true, message: "la fecha de venta es vacía"}}
   ];
-      /* eslint-enable */
+    /* eslint-enable */
     testCases.forEach((test) => {
       test.states.forEach((state) => {
         it(`Un producto ${state} "${test.result.message}"`, () => {
@@ -347,10 +376,10 @@ describe("Test isValidSellingDate", () => {
   });
   describe("Fechas de venta inválidas, comparadas con el inicio de kchmodas", () => {
     /* eslint-disable */
-const testCases = [
+    const testCases = [
   { sellingDate: dateBeforeStart,   purchaseDate: StartDate, states: ['Vendido' , 'Credito', 'Apartado'], result:{ sellingDate: dateBeforeStart,   validation: false, message: "no puede ser anterior al inicio de kchmodas" }},
   { sellingDate: dateFormatInvalid, purchaseDate: StartDate, states: ['Vendido' , 'Credito', 'Apartado'], result:{ sellingDate: dateFormatInvalid, validation: false, message: "tiene un formato no permitido" }}
-];
+  ];
     /* eslint-enable */
     testCases.forEach((test) => {
       test.states.forEach((state) => {
@@ -373,13 +402,13 @@ const testCases = [
   });
   describe("Condición de venta con fechas vacías", () => {
     /* eslint-disable */
-const testCases = [
+    const testCases = [
   { sellingDate: StartDate,         purchaseDate: StartDate, states: ["Sin vender", "Dañado", "Perdido", "Robado"], result:{ sellingDate: StartDate,         validation: false, message: "la fecha debe estar vacía"}},
   { sellingDate: dateAfterStart,    purchaseDate: StartDate, states: ["Sin vender", "Dañado", "Perdido", "Robado"], result:{ sellingDate: dateAfterStart,    validation: false, message: "la fecha debe estar vacía"}},
   { sellingDate: dateBeforeStart,   purchaseDate: StartDate, states: ["Sin vender", "Dañado", "Perdido", "Robado"], result:{ sellingDate: dateBeforeStart,   validation: false, message: "la fecha debe estar vacía"}},
   { sellingDate: dateFormatInvalid, purchaseDate: StartDate, states: ["Sin vender", "Dañado", "Perdido", "Robado"], result:{ sellingDate: dateFormatInvalid, validation: false, message: "la fecha debe estar vacía"}},
   { sellingDate: validDate,         purchaseDate: validDate, states: ["Sin vender", "Dañado", "Perdido", "Robado"], result:{ sellingDate: validDate,         validation: false, message: "la fecha debe estar vacía"}}
-];
+  ];
     /* eslint-enable */
     testCases.forEach((test) => {
       test.states.forEach((state) => {
@@ -401,12 +430,12 @@ const testCases = [
     });
   });
   describe("Fechas de venta con rangos y formatos inválidos", () => {
-  /* eslint-disable */
-const testCases = [
+    /* eslint-disable */
+    const testCases = [
   { sellingDate: dateBeforeValid,   purchaseDate: validDate, states: ['Vendido' , 'Credito', 'Apartado'], result:{ sellingDate: dateBeforeValid,   validation: false, message: "no puede ser posterior a la de compra" }},
   { sellingDate: dateFormatInvalid, purchaseDate: validDate, states: ['Vendido' , 'Credito', 'Apartado'], result:{ sellingDate: dateFormatInvalid, validation: false, message: "tiene un formato no permitido" }}
-];
-      /* eslint-enable */
+  ];
+    /* eslint-enable */
     testCases.forEach((test) => {
       test.states.forEach((state) => {
         it(`Si ${state} es la condición del producto, ${test.sellingDate} ${test.result.message}`, () => {
@@ -503,8 +532,8 @@ describe("Test isValidDate", () => {
 });
 
 describe("Test isValidTelephone", () => {
+  /* eslint-disable */
   describe("Condición del producto: Vendido, Crédito o Apartado", () => {
-    /* eslint-disable */
   const testCases = [ 
     { phone: "1135735745", states : ["Vendido", "Credito", "Apartado"], validation : true, message: "El cliente puede tener un teléfono"  },
     { phone:      "",      states : ["Vendido", "Credito", "Apartado"], validation : true, message: "El telefono puede estar vacío, es opcional"  }
@@ -527,12 +556,12 @@ describe("Test isValidTelephone", () => {
   });
   describe("Formatos de teléfono inválidos", () => {
     /* eslint-disable */
-  const testCases = [ 
+    const testCases = [ 
     { phone:    "1135",     states : ["Vendido", "Credito", "Apartado"], validation : false },
     { phone: "0135735745",  states : ["Vendido", "Credito", "Apartado"], validation : false },
     { phone: "11-35735745", states : ["Vendido", "Credito", "Apartado"], validation : false },
   ]
-  /* eslint-enable */
+    /* eslint-enable */
     testCases.forEach((test) => {
       test.states.forEach((state) => {
         it(`El teléfono "${test.phone}" tiene un formato incorrecto`, () => {
@@ -550,10 +579,10 @@ describe("Test isValidTelephone", () => {
   });
   describe("Numéro telefónico vacío", () => {
     /* eslint-disable */
-  const testCases = [ 
+    const testCases = [ 
     { phone: "", states : ["Sin vender", "Dañado", "Perdido", "Robado"], validation : true, message: "Para estados del producto"  }
   ]
-  /* eslint-enable */
+    /* eslint-enable */
     testCases.forEach((test) => {
       test.states.forEach((state) => {
         it(`${test.message} "${state}", el teléfono debe estar vacío`, () => {
@@ -571,7 +600,7 @@ describe("Test isValidTelephone", () => {
   });
   describe("Estados que no requieren un teléfono", () => {
     /* eslint-disable */
-  const testCases = [ 
+    const testCases = [ 
     { phone: "1135735745", states : ["Sin vender", "Dañado", "Perdido", "Robado"], validation : false, message: "Para producto"}
   ]
     /* eslint-enable */
