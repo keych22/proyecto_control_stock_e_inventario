@@ -220,10 +220,10 @@ export function isValidSellingPrice(
       }
       break;
     case "Dañado":
-    case "Perdido":
       validation = true;
       break;
     case "Robado":
+    case "Perdido":
       if (isSellingPriceNotEmpty) {
         validation = `El precio de venta debe estar vacío si el producto esta ${state.toLowerCase()}`;
       }

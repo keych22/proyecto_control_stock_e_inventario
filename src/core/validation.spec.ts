@@ -63,9 +63,9 @@ describe("Test isValidSellingPrice", () => {
   /* eslint-disable */
     const testCases = [
       { sellingPrice: "",     credit: "50",  states: ["Vendido", "Credito"],                                                          result: {sellingPriceAmount: NaN  , validation: false, message: "es la condición del producto, el precio no puede estar vacío" }},
-      { sellingPrice: "",     credit: "50",  states: ["Apartado", "Sin vender", "Dañado", "Perdido"],                                 result: {sellingPriceAmount: NaN  , validation: false, message: "es la condición del producto, el precio puede estar vacío" }},
-      { sellingPrice: "",     credit: "50",  states: ["Robado"],                                                                      result: {sellingPriceAmount: NaN  , validation: true , message: "es la condición del producto, el precio debe estar vacío" }},
-      { sellingPrice: "100",  credit: "",    states: ["Robado"],                                                                      result: {sellingPriceAmount: 10000, validation: false, message: "es la condición del producto, el precio no puede tener un monto" }},
+      { sellingPrice: "",     credit: "50",  states: ["Apartado", "Sin vender", "Dañado"],                                            result: {sellingPriceAmount: NaN  , validation: false, message: "es la condición del producto, el precio puede estar vacío" }},
+      { sellingPrice: "",     credit: "50",  states: ["Robado", "Perdido"],                                                           result: {sellingPriceAmount: NaN  , validation: true , message: "es la condición del producto, el precio debe estar vacío" }},
+      { sellingPrice: "100",  credit: "",    states: ["Robado", "Perdido"],                                                                      result: {sellingPriceAmount: 10000, validation: false, message: "es la condición del producto, no debe tener precio" }},
       { sellingPrice: "A",    credit: "50",  states: ["Vendido", "Credito", "Apartado", "Sin vender", "Dañado", "Perdido", "Robado"], result: {sellingPriceAmount: NaN  , validation: false, message: "es la condición del producto, el precio no puede tener letras" }},
       { sellingPrice: "A100", credit: "50",  states: ["Vendido", "Credito", "Apartado", "Sin vender", "Dañado", "Perdido", "Robado"], result: {sellingPriceAmount: NaN  , validation: false, message: "es la condición del producto, el precio no puede ser alfanumérico" }},
       { sellingPrice: "100",  credit: "50",  states: ["Credito"],                                                                     result: {sellingPriceAmount: 10000, validation: true , message: "es la condición del producto, el precio tiene que ser mayor al abono"}},
@@ -351,7 +351,7 @@ const testCases = [
   { sellingDate: dateBeforeStart,   purchaseDate: StartDate, states: ['Vendido' , 'Credito', 'Apartado'], result:{ sellingDate: dateBeforeStart,   validation: false, message: "no puede ser anterior al inicio de kchmodas" }},
   { sellingDate: dateFormatInvalid, purchaseDate: StartDate, states: ['Vendido' , 'Credito', 'Apartado'], result:{ sellingDate: dateFormatInvalid, validation: false, message: "tiene un formato no permitido" }}
 ];
-  /* eslint-enable */
+    /* eslint-enable */
     testCases.forEach((test) => {
       test.states.forEach((state) => {
         it(`Si ${state} es la condición del producto, ${test.sellingDate} ${test.result.message} `, () => {
