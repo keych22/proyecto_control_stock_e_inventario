@@ -44,7 +44,7 @@ class Validation {
   public getErrors() {
     const errors = [];
     for (const validation of Object.values(this)) {
-      if (validation instanceof String) {
+      if (_.isString(validation)) {
         errors.push(validation);
       } else if (!validation) {
         errors.push("Hay un error de validación");
