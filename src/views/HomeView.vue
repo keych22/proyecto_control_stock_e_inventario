@@ -22,7 +22,6 @@
       :items-per-page="5"
       class="elevation-2"
       item-value="product"
-      :search="search"
     >
       <template #[`item.actions`]="{ item }">
         <v-icon size="small" class="ml-3" @click="editItem(item.raw.key)">
