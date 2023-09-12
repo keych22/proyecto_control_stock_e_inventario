@@ -101,7 +101,50 @@ function storeSetup() {
     return _.cloneDeep(product);
   }
 
+  function filterProducts(filtro: string) {
+    const columnasAFiltrar = [
+      "purchaseDate",
+      "city",
+      "product",
+      "type",
+      "brand",
+      "gender",
+      "code",
+      "color",
+      "size",
+      "state",
+    ];
+
+    const valoresABuscar = filtro.split(" ");
+    const valoresABuscarAminusculas = _.map(valoresABuscar, (valor) =>
+      valor.toLowerCase()
+    );
+    console.log(valoresABuscar);
+    console.log(valoresABuscarAminusculas);
+
+    return products.value.filter((producto) => {
+      const columnasYValores = _.pick(
+        producto.product,
+        columnasAFiltrar
+      ) as Record<string, string>;
+      const valores = _.values(columnasYValores);
+      console.log(columnasYValores);
+      console.log(valores);
+      const valoresAMinusculas = _.map(valores, (valor) => valor.toLowerCase());
+      console.log(valoresAMinusculas);
+      return valoresABuscarAminusculas.every((valor) => {
+        console.log(valor);
+        const xx = _.find(valoresAMinusculas, (valorMinuscula) => {
+          console.log(valorMinuscula);
+          return valorMinuscula.includes(valor);
+        }); // valoresAMinusculas.includes(valor)
+        return !_.isUndefined(xx);
+      });
+    });
+  }
+
   return {
+    filterProducts,
     products,
     update,
     loadInventory,

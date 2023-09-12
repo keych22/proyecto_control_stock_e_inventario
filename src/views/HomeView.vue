@@ -6,7 +6,7 @@
       </v-col>
       <v-col cols="12" sm="6">
         <v-text-field
-          v-model="search"
+          v-model.trim="search"
           prepend-inner-icon="mdi-magnify"
           label="Buscar Productos"
           variant="outlined"
@@ -44,9 +44,10 @@ const dbStore = useDBStore();
 const router = useRouter();
 
 const search = ref("");
+const splitSearch = computed(() => dbStore.filterProducts(search.value));
 
 const tableData = computed(() =>
-  _.map(dbStore.products, (x) => {
+  _.map(splitSearch.value, (x) => {
     return { key: x.key, ...x.product };
   })
 );
