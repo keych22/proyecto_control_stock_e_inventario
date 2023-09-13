@@ -103,10 +103,10 @@ function storeSetup() {
 
   function filterProducts(filtro: string) {
     const columnasAFiltrar = [
-      "purchaseDate",
       "city",
       "product",
       "type",
+      "detail",
       "brand",
       "gender",
       "code",

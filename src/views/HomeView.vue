@@ -56,10 +56,10 @@ const editItem = (key: any) => {
 };
 
 const headers = [
-  { title: "Fecha de Compra", key: "purchaseDate" },
   { title: "Ciudad", key: "city" },
   { title: "Producto", key: "product" },
   { title: "Tipo de Artículo", key: "type" },
+  { title: "Detalle", key: "detail" },
   { title: "Marca", key: "brand" },
   { title: "Género", key: "gender" },
   { title: "Código", key: "code" },
