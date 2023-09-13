@@ -1,11 +1,12 @@
 <template>
-  <nav-bar
-    ><h1>Información de Venta</h1>
+  <nav-bar>
     <v-form ref="form">
-      <v-row>
-        <v-col cols="6">
-          <div class="font-italic font-weight-black">Descripción</div>
-          <v-list class="list-group list-group-flush">
+      <v-container class="pa-8">
+        <v-row class="font-italic font-weight-black">
+          Descripción del producto
+        </v-row>
+        <v-row class="mb-4">
+          <v-col cols="12" sm="6">
             <v-list-item class="list-group-item border-0">
               Producto: {{ product.product }}
             </v-list-item>
@@ -24,109 +25,142 @@
             <v-list-item class="list-group-item border-0"
               >Talle: {{ product.size }}
             </v-list-item>
-          </v-list>
-        </v-col>
-        <v-col col="6">
-          <v-select
-            v-model="product.state"
-            label="Condición del producto"
-            :items="[
-              'Apartado',
-              'Crédito',
-              'Dañado',
-              'Perdido',
-              'Sin vender',
-              'Vendido',
-            ]"
-          />
-        </v-col>
-      </v-row>
-      <v-row class="font-italic font-weight-black"
-        >Datos sobre el cliente</v-row
-      >
-      <v-row>
-        <v-col col="6">
-          <v-text-field
-            v-model="product.client"
-            label="Nombre"
-            placeholder="Nombre del cliente"
-          />
-          <v-text-field
-            v-model="product.telephone"
-            label="Teléfono (opcional)"
-            :rules="[validateTelephone]"
-            placeholder="Indique un número telefónico"
-          />
-        </v-col>
-        <v-col col="6">
-          <v-text-field
-            v-model="product.address"
-            label="Lugar de entrega"
-            placeholder="Dirección"
-          />
-          <v-text-field
-            v-model="product.sellingDate"
-            type="date"
-            :rules="[validateSellingDate]"
-            label="Fecha de venta"
-          />
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col col="6">
-          <v-select
-            v-model="product.contact"
-            label="Forma de contacto"
-            :items="[
-              'Facebook',
-              'Instagram',
-              'Ninguna',
-              'Personal',
-              'Referencia',
-              'Whatsapp',
-            ]"
-          />
-        </v-col>
-      </v-row>
-      <v-row>
-        <div class="font-italic font-weight-black">Información de venta</div>
-      </v-row>
-      <v-row>
-        <v-text-field
-          v-model="purchasePriceString"
-          label="Precio de compra"
-          type="text"
-        />
-      </v-row>
-      <v-row>
-        <v-text-field
-          v-model="creditString"
-          label="Abono"
-          type="text"
-          placeholder="Monto"
-        />
-      </v-row>
-      <v-row>
-        <v-text-field v-model="difference" label="Diferencia" type="text" />
-      </v-row>
-      <v-row>
-        <v-text-field
-          v-model="sellingPriceString"
-          label="Precio de venta"
-          type="text"
-        />
-      </v-row>
-      <v-row>
-        <v-btn @click="cancel">Cancelar</v-btn>
-        <v-btn @click="apply">Aplicar</v-btn>
-      </v-row>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-select
+              v-model="product.state"
+              class="pt-2 pr-3"
+              label="Condición"
+              variant="outlined"
+              :items="States"
+            />
+          </v-col>
+        </v-row>
+        <v-row class="font-italic font-weight-black mb-0"
+          >Datos del cliente</v-row
+        >
+        <v-row class="mt-2">
+          <v-col cols="12" sm="6">
+            <v-text-field
+              v-model="product.client"
+              :rules="[validateClientInput]"
+              label="Nombre del cliente"
+              placeholder="Nota: opcional si el estado es 'Vendido'"
+              variant="outlined"
+            />
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              v-model="product.telephone"
+              label="Teléfono (opcional)"
+              :rules="[validateTelephoneInput]"
+              placeholder="Ejemplos: 1135726783  o  2995189044"
+              variant="outlined"
+            />
+          </v-col>
+        </v-row>
+        <v-row class="mt-2">
+          <v-col cols="12" sm="6">
+            <v-text-field
+              v-model="product.address"
+              :rules="[validateDeliveryInput]"
+              label="Lugar de entrega (Opcional)"
+              variant="outlined"
+              placeholder="Dirección"
+            />
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              v-model="product.sellingDate"
+              type="date"
+              :rules="[validateSellingDateInput]"
+              label="Fecha de venta"
+              variant="outlined"
+            />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col col="12" sm="6">
+            <v-select
+              v-model="product.contact"
+              label="Forma de contacto"
+              variant="outlined"
+              :items="ContactMethod"
+            />
+          </v-col>
+        </v-row>
+        <v-row>
+          <div class="font-italic font-weight-black mb-2">Datos de venta</div>
+        </v-row>
+        <v-row class="mt-2">
+          <v-col cols="12" sm="6">
+            <v-text-field
+              v-model="purchasePriceString"
+              label="Precio de compra"
+              variant="outlined"
+              readonly
+            />
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              :model-value="sellingPriceString"
+              :rules="[validateSellingPriceInput]"
+              label="Precio de venta"
+              variant="outlined"
+              @change="changeSellingPrice"
+            />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              :model-value="creditString"
+              :rules="[validateCreditInput]"
+              label="Abono"
+              placeholder="Monto"
+              variant="outlined"
+              @change="changeCredit"
+            />
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              v-model="difference"
+              label="Resta por pagar"
+              variant="outlined"
+              placeholder="Diferencia"
+              readonly
+            />
+          </v-col>
+        </v-row>
+        <v-row class="d-flex justify-end mb-2">
+          <v-btn class="mr-2 bg-blue-grey-lighten-4" @click="cancel"
+            >Cancelar</v-btn
+          >
+          <v-btn
+            color="success"
+            class="mr-3"
+            :disabled="disabledApplyButton"
+            @click="apply"
+            >Aplicar</v-btn
+          >
+        </v-row>
+      </v-container>
     </v-form>
   </nav-bar>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
-import { isValidSellingDate, isValidTelephone } from "@/core/validation";
+import { ContactMethod, States } from "@/core/core";
+import { computed, onMounted, ref, watch } from "vue";
+import {
+  convertAmountDecimals,
+  isValidClient,
+  isValidCredit,
+  isValidDelivery,
+  isValidSellingDate,
+  isValidSellingPrice,
+  isValidTelephone,
+} from "@/core/validation";
 import { useRoute, useRouter } from "vue-router";
 import NavBar from "@/components/NavBar.vue";
 import type { VForm } from "vuetify/lib/components/index.mjs";
@@ -140,14 +174,108 @@ const db = useDBStore();
 const form = ref<VForm | null>(null);
 const product = ref(db.getProduct(key));
 
-watch(
-  product,
-  async () => {
-    const validation = await form.value.validate();
-    console.log(validation);
-  },
-  { deep: true }
+function changeCredit(event: Event) {
+  const value = convertAmountDecimals((event.target as HTMLInputElement).value);
+  product.value.credit = value;
+}
+
+function changeSellingPrice(event: Event) {
+  const value = convertAmountDecimals((event.target as HTMLInputElement).value);
+  product.value.sellingPrice = value;
+}
+
+const pesosToCents = 100;
+function convertDecimalToString(number: number): string {
+  return (number / pesosToCents).toFixed(2);
+}
+
+const creditString = computed(
+  () =>
+    // Este variable recibe el valor calculado unicamente despues
+    isNaN(product.value.credit) // de que se dispara el evento change?
+      ? "" // TUVE QUE COLOCAR VACIO..? o meter esta funcion dentro
+      : convertDecimalToString(product.value.credit) // changeCredit
 );
+
+// class="mr-3 bg-blue-lighten-1 text-blue-grey-darken-3"
+
+const difference = computed(() => {
+  const difference = product.value.sellingPrice - product.value.credit;
+  return isNaN(difference) ? "" : convertDecimalToString(difference);
+});
+
+const purchasePriceString = computed(() =>
+  // Esta funcion esta demás? ya que este valor viene sin error
+  isNaN(product.value.purchasePrice) // del archivo CSV o ya es validado previamente?
+    ? "invalid"
+    : convertDecimalToString(product.value.purchasePrice)
+);
+
+const sellingPriceString = computed(() =>
+  isNaN(product.value.sellingPrice)
+    ? ""
+    : convertDecimalToString(product.value.sellingPrice)
+);
+
+const disabledApplyButton = ref(false);
+
+async function enableValidations() {
+  const isValidForm = await form.value.validate();
+  disabledApplyButton.value = !isValidForm.valid;
+}
+
+watch(product, enableValidations, { deep: true });
+
+onMounted(enableValidations);
+
+function validateClientInput(client: string): boolean | string {
+  const state = product.value.state;
+  const clientAndValidation = isValidClient(client, state);
+  return clientAndValidation[1];
+}
+
+function validateCreditInput(credit: string): boolean | string {
+  const sellingPrice = convertDecimalToString(product.value.sellingPrice);
+  const state = product.value.state;
+  const creditAndValidation = isValidCredit(credit, sellingPrice, state);
+  return creditAndValidation[1];
+}
+
+function validateDeliveryInput(delivery: string): boolean | string {
+  const state = product.value.state;
+  const deliveryAndValidation = isValidDelivery(delivery, state);
+  return deliveryAndValidation[1];
+}
+
+function validateSellingDateInput(sellingDate: string): boolean | string {
+  const state = product.value.state;
+  const purchaseDate = product.value.purchaseDate;
+  const sellingDateAndValidation = isValidSellingDate(
+    sellingDate,
+    purchaseDate,
+    state
+  );
+  const error = sellingDateAndValidation[1];
+  return error;
+}
+
+function validateSellingPriceInput(sellingPrice: string): boolean | string {
+  const credit = convertDecimalToString(product.value.credit);
+  const state = product.value.state;
+  const sellingPriceAndValidation = isValidSellingPrice(
+    sellingPrice,
+    credit,
+    state
+  );
+  return sellingPriceAndValidation[1];
+}
+
+function validateTelephoneInput(telephone: string): boolean | string {
+  const state = product.value.state;
+  const telephoneAndValidation = isValidTelephone(telephone, state);
+  return telephoneAndValidation[1];
+}
+
 function goHome() {
   router.push({ name: "home" });
 }
@@ -159,43 +287,4 @@ function apply() {
 function cancel() {
   goHome();
 }
-
-function convertDecimalToString(number: number): string {
-  return (number / 100).toFixed(2);
-}
-
-const purchasePriceString = computed(() =>
-  convertDecimalToString(product.value.purchasePrice)
-);
-
-const sellingPriceString = computed(() =>
-  convertDecimalToString(product.value.sellingPrice)
-);
-
-const difference = computed(() => {
-  return ((product.value.sellingPrice - product.value.credit) / 100).toFixed(2);
-});
-
-function validateTelephone(telephone: string): boolean | string {
-  const tuplaValueValidTelephone = isValidTelephone(
-    telephone,
-    product.value.state
-  );
-  const valid = tuplaValueValidTelephone[1];
-  return valid ? true : "Formato de télefono incorrecto";
-}
-
-function validateSellingDate(sellingDate: string): boolean | string {
-  const tuplaValueValidSellingDate = isValidSellingDate(
-    sellingDate,
-    product.value.purchaseDate,
-    product.value.state
-  );
-  const valid = tuplaValueValidSellingDate[1];
-  return valid ? true : "Fecha ingresada en un rango no válido";
-}
-
-const creditString = computed(() =>
-  convertDecimalToString(product.value.credit)
-);
 </script>

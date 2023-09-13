@@ -32,10 +32,22 @@ const States = [
   "Vendido",
   "Credito",
   "Apartado",
-  "SinVender",
+  "Sin vender",
   "Dañado",
   "Perdido",
+  "Robado",
 ];
+
+const ContactMethod = [
+  "Facebook",
+  "Instagram",
+  "Ninguna",
+  "Personal",
+  "Referencia",
+  "Whatsapp",
+  "Feria",
+];
+
 const StartDate = "2019-04-22";
 
-export { Entry, Cities, StartDate, States };
+export { Entry, Cities, ContactMethod, StartDate, States };
