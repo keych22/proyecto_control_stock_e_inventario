@@ -36,6 +36,7 @@ const States = [
   "Dañado",
   "Perdido",
   "Robado",
+  "Regalado",
 ];
 
 const ContactMethod = [
