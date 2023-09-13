@@ -119,8 +119,6 @@ function storeSetup() {
     const valoresABuscarAminusculas = _.map(valoresABuscar, (valor) =>
       valor.toLowerCase()
     );
-    console.log(valoresABuscar);
-    console.log(valoresABuscarAminusculas);
 
     return products.value.filter((producto) => {
       const columnasYValores = _.pick(
@@ -128,16 +126,12 @@ function storeSetup() {
         columnasAFiltrar
       ) as Record<string, string>;
       const valores = _.values(columnasYValores);
-      console.log(columnasYValores);
-      console.log(valores);
       const valoresAMinusculas = _.map(valores, (valor) => valor.toLowerCase());
-      console.log(valoresAMinusculas);
       return valoresABuscarAminusculas.every((valor) => {
-        console.log(valor);
         const xx = _.find(valoresAMinusculas, (valorMinuscula) => {
           console.log(valorMinuscula);
           return valorMinuscula.includes(valor);
-        }); // valoresAMinusculas.includes(valor)
+        });
         return !_.isUndefined(xx);
       });
     });
