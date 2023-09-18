@@ -19,7 +19,7 @@
     <v-data-table
       :headers="headers"
       :items="tableData"
-      :items-per-page="5"
+      :items-per-page="20"
       class="elevation-2"
       item-value="product"
     >
