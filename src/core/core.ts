@@ -30,7 +30,7 @@ const Cities = ["NEUQUÉN", "BUENOS AIRES"];
 
 const States = [
   "Vendido",
-  "Credito",
+  "Crédito",
   "Apartado",
   "Sin vender",
   "Dañado",
