@@ -131,7 +131,7 @@ export function isValidClient(
   switch (state) {
     case "Vendido":
       break;
-    case "Credito":
+    case "Crédito":
     case "Apartado":
       if (_.isEmpty(client)) {
         validation = `Si es ${state.toLowerCase()} la condición del producto, el nombre del cliente no puede estar vacío`;
@@ -159,7 +159,7 @@ export function isValidDelivery(
   let validation: boolean | string = true;
   switch (state) {
     case "Vendido":
-    case "Credito":
+    case "Crédito":
       break;
     case "Apartado":
     case "Sin vender":
@@ -212,7 +212,7 @@ export function isValidSellingPrice(
         validation = `El precio de venta "${sellingPrice}" esta vacío o tiene formato inválido para el producto vendido`;
       }
       break;
-    case "Credito":
+    case "Crédito":
       if (isSellingPriceEmptyOrInvalid) {
         validation = `El precio de venta "${sellingPrice}" esta vacío o tiene formato inválido para el producto a crédito`;
       } else if (isCreditGreaterThanOrEqualToSellingPrice) {
@@ -254,7 +254,7 @@ export function isValidCredit(
 
   let validation: boolean | string = true;
   switch (state) {
-    case "Credito":
+    case "Crédito":
       if (isCreditNotEmptyAndInvalid) {
         validation = `El abono "${credit}" tiene un formato inválido`;
       } else if (isCreditGreaterThanOrEqualToSellingPrice) {
@@ -317,7 +317,7 @@ export function isValidSellingDate(
   let validation: boolean | string = true;
   switch (state) {
     case "Vendido":
-    case "Credito":
+    case "Crédito":
     case "Apartado":
       if (isSellingDateInvalid || isSellingDateLessThanPurchaseDate) {
         validation = `Fecha de venta inválida, en un rango no permitido o menor que la de compra. Fecha de venta "${sellingDate}" y fecha de compra "${purchaseDate}". `;
@@ -369,7 +369,7 @@ export function isValidTelephone(
   let validation: boolean | string = true;
   switch (state) {
     case "Vendido":
-    case "Credito":
+    case "Crédito":
     case "Apartado":
       if (isTelephoneNotEmptyAndNotMatchRegex) {
         validation = `Formato ingresado "${telephone}" es incorrecto, deben ser 10 dígitos únicamente sin empezar por 0`;
